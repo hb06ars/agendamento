@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,6 +19,7 @@ import java.util.Random;
 
 import javax.persistence.Column;
 
+import org.apache.xmlbeans.impl.store.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -71,6 +73,7 @@ public class SistemaController {
 		public static String itemMenu = "home";
 		public static String paginaAtual = "Dashboard";
 		public static String iconePaginaAtual = "fa fa-home";
+		public static Integer mesSelecionado;
 		
 		
 		
@@ -106,6 +109,12 @@ public class SistemaController {
 	        return matricula;
 		}
 		
+		public void resetaMes() {
+			Calendar calendar = new GregorianCalendar();
+			mesSelecionado = calendar.get(Calendar.MONTH);
+			mesSelecionado = mesSelecionado+1;
+		}
+		
 		@RequestMapping(value = {"/","/login"}, produces = "text/plain;charset=UTF-8", method = RequestMethod.GET) // Pagina de Vendas
 		public ModelAndView login(@RequestParam(value = "nome", required = false, defaultValue = "Henrique Brandão") String nome) throws SQLException { //Funcao e alguns valores que recebe...
 			//Caso não haja registros
@@ -116,6 +125,11 @@ public class SistemaController {
 			List<StatusChamado> st = statusChamadoDao.buscarTudo();
 			List<Chamado> ch = chamadoDao.buscarTudo();
 			usuarioSessao = null;
+			
+			Calendar calendar = new GregorianCalendar();
+			mesSelecionado = calendar.get(Calendar.MONTH);
+			mesSelecionado = mesSelecionado+1;
+		    
 			if(p == null || p.size() == 0) {
 				Perfil perfil = new Perfil();
 				perfil.setAtivo(true);
@@ -716,7 +730,23 @@ public class SistemaController {
 		
 		
 		@RequestMapping(value = "/agendamento", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView agendamento(  ) throws SQLException {
+		public ModelAndView agendamento(Boolean proximo, Boolean anterior, Integer mesAtual  ) throws SQLException, ParseException {
+			if(proximo != null && proximo) {
+				mesSelecionado = mesSelecionado+1;
+				if(mesSelecionado > 12) {
+					mesSelecionado = 1;
+				}
+			}
+			if(anterior != null && anterior) {
+				mesSelecionado = mesSelecionado-1;
+				if(mesSelecionado < 1) {
+					mesSelecionado = 12;
+				}
+			}
+			if(proximo == null && anterior == null ) {
+				resetaMes();
+			}
+			
 			paginaAtual = "Agendamento";
 			iconePaginaAtual = "fa fa-calendar"; //Titulo do menuzinho.
 			String link = verificaLink("pages/agendamento");
@@ -726,11 +756,170 @@ public class SistemaController {
 			modelAndView.addObject("paginaAtual", paginaAtual); 
 			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
 			if(logado) {
+				int maxDiasMes = 28;
+				List<Integer> listaDias = new ArrayList<Integer>();
 				
-				
-				
-				
-				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");	
+			    Calendar calendar = new GregorianCalendar();
+			    int ano = calendar.get(Calendar.YEAR);
+			    int mes = 0;
+			    int dia = 1;
+			    
+			    if(proximo == null && anterior == null ) {
+			    	mes = calendar.get(Calendar.MONTH);
+			    	mes++;
+			    	dia = calendar.get(Calendar.DAY_OF_MONTH);
+			    } else {
+			    	mes = mesSelecionado;
+			    	dia = 1;
+			    }
+			     
+			    int semanaVal  = calendar.get(Calendar.DAY_OF_WEEK);
+			    String semana = "";
+			    String mesStr = "";
+			    
+			    //String dia val
+			    String diaVal = "";
+			    if(dia < 10) {
+			    	diaVal = "0"+dia;
+			    } else {
+			    	diaVal = ""+dia;
+			    }
+			    
+			    //Primeiro dia da semana do mes:
+			    String diaPrimeiroSemana = "---";
+			    GregorianCalendar gc = new GregorianCalendar();
+			    gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
+			    
+			    
+			    switch (gc.get(Calendar.DAY_OF_WEEK)) {
+		            case Calendar.SUNDAY:
+		            	diaPrimeiroSemana = "DOM";
+		                break;
+		            case Calendar.MONDAY:
+		            	diaPrimeiroSemana = "SEG";
+		                break;
+		            case Calendar.TUESDAY:
+		            	diaPrimeiroSemana = "TER";
+		            break;
+		            case Calendar.WEDNESDAY:
+		            	diaPrimeiroSemana = "QUA";
+		                break;
+		            case Calendar.THURSDAY:
+		            	diaPrimeiroSemana = "QUI";
+		                break;
+		            case Calendar.FRIDAY:
+		            	diaPrimeiroSemana = "SEX";
+		                break;
+		            case Calendar.SATURDAY:
+		            	diaPrimeiroSemana = "SAB";
+			    }
+			    
+			    switch(semanaVal) {
+				    case 1:
+				    	semana = "Domingo";
+				    	break;
+				    case 2:
+				    	semana = "Segunda-Feira";
+				    	break;
+				    case 3:
+				    	semana = "Terça-Feira";
+				    	break;
+				    case 4:
+				    	semana = "Quarta-Feira";
+				    	break;
+				    case 5:
+				    	semana = "Quinta-Feira";
+				    	break;
+				    case 6:
+				    	semana = "Sexta-Feira";
+				    	break;
+				    case 7:
+				    	semana = "Sábado";
+				    	break;
+				    default:
+				}
+			    
+			    switch(mes) {
+				    case 1:
+				    	mesStr = "Janeiro";
+				    	break;
+				    case 2:
+				    	mesStr = "Fevereiro";
+				    	break;
+				    case 3:
+				    	mesStr = "Mar&ccedil;o";
+				    	break;
+				    case 4:
+				    	mesStr = "Abril";
+				    	break;
+				    case 5:
+				    	mesStr = "Maio";
+				    	break;
+				    case 6:
+				    	mesStr = "Junho";
+				    	break;
+				    case 7:
+				    	mesStr = "Julho";
+				    	break;
+				    case 8:
+				    	mesStr = "Agosto";
+				    	break;
+				    case 9:
+				    	mesStr = "Setembro";
+				    	break;
+				    case 10:
+				    	mesStr = "Outubro";
+				    	break;
+				    case 11:
+				    	mesStr = "Novembro";
+				    	break;
+				    case 12:
+				    	mesStr = "Dezembro";
+				    	break;
+				    default:
+			  }
+			  
+			    
+			  
+			  
+			  if(proximo == null && anterior == null ) {
+				  Calendar datas = new GregorianCalendar();
+			      datas.set(Calendar.MONTH, Calendar.MONTH);//2
+			      maxDiasMes = datas.getActualMaximum (Calendar.DAY_OF_MONTH);
+			      for(int i = 1; i <= maxDiasMes; i++) {
+			        	listaDias.add(i);
+			      }
+			  } else {
+				  GregorianCalendar gcb = new GregorianCalendar();
+				  gcb.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
+			      maxDiasMes = gcb.getActualMaximum (Calendar.DAY_OF_MONTH);
+			      for(int i = 1; i <= maxDiasMes; i++) {
+			        	listaDias.add(i);
+			      }
+			  }
+			    
+		        
+		        
+		      System.out.println("Ano \t\t: " + ano);
+		      System.out.println("Mês \t\t: " + mes);
+		      System.out.println("MêsStr \t\t: " + mesStr);
+			  System.out.println("Dia \t\t: " + dia);
+			  System.out.println("Dia da Semana \t: " + semana);
+			  System.out.println("Primeiro dia da Semana \t: " + diaPrimeiroSemana);
+			  System.out.println("Máximo mês \t: " + maxDiasMes);
+			  System.out.println("-----------------------------------------------------------------");
+		        
+			  modelAndView.addObject("mesSelecionado", mesSelecionado);
+			  modelAndView.addObject("maxDiasMes", maxDiasMes);
+			  modelAndView.addObject("hoje", "Dia " + diaVal + ": " + semana);
+			  modelAndView.addObject("diaVal", diaVal);
+			  modelAndView.addObject("dia", dia);
+			  modelAndView.addObject("mes", mesStr);
+			  modelAndView.addObject("ano", ano);
+			  modelAndView.addObject("listaDias", listaDias);
+			  modelAndView.addObject("diaPrimeiroSemana", diaPrimeiroSemana);
+			    
 			}
 			return modelAndView; //retorna a variavel
 		}

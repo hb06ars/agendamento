@@ -255,171 +255,226 @@ function redirecionar(link){
 	<div class="col-lg-12">
 		<div class="row">
 			<div class="col-md-12">
+				<div class="container_b">
+			      <div class="calendar_b">
+			        <div class="front_b" id="calendario" style="display:block">
+			          <div class="current-date_b">
+			            <h1>${hoje }</h1>
+			            <h1>${mes } ${ano }</h1>	
+			          </div>
+			          <div class="current-month">
+			            <ul class="week-days_b">
+			              <li>DOM</li>
+			              <li>SEG</li>
+			              <li>TER</li>
+			              <li>QUA</li>
+			              <li>QUI</li>
+			              <li>SEX</li>
+			              <li>SAB</li>
+			            </ul>
 				
-				
-				
-				
-				
-				
-				
-
-    <div class="container_b">
-      <div class="calendar_b">
-        <div class="front_b" id="calendario" style="display:block">
-          <div class="current-date_b">
-            <h1>Dia 15: Sexta-Feira</h1>
-            <h1>Mar&ccedil;o 2021</h1>	
-          </div>
-
-          <div class="current-month">
-            <ul class="week-days_b">
-              <li>DOM</li>
-              <li>SEG</li>
-              <li>TER</li>
-              <li>QUA</li>
-              <li>QUI</li>
-              <li>SEX</li>
-              <li>SAB</li>
-            </ul>
-
-            <div class="weeks_b">
-              <div class="first">
-                <span class="last-month_b">26</span>
-                <span class="last-month_b">27</span>
-                <span class="last-month_b">28</span>
-                <span class="last-month_b">29</span>
-                <span class="last-month_b">30</span>
-                <span class="last-month_b">31</span>
-                <span>01</span>
-              </div>
-
-              <div class="second">
-                <span>02</span>
-                <span class="event">03</span>
-                <span>04</span>
-                <span>05</span>
-                <span>06</span>
-                <span>07</span>
-                <span>08</span>
-              </div>
-
-              <div class="third">
-                <span>09</span>
-                <span>10</span>
-                <span>11</span>
-                <span class="active">12</span>
-                <span>13</span>
-                <span>14</span>
-                <span>15</span>
-              </div>
-
-              <div class="fourth">
-                <span>16</span>
-                <span>17</span>
-                <span>18</span>
-                <span>19</span>
-                <span>20</span>
-                <span>21</span>
-                <span>22</span>
-              </div>
-
-              <div class="fifth">
-                <span>23</span>
-                <span>24</span>
-                <span>25</span>
-                <span>26</span>
-                <span>27</span>
-                <span>28</span>
-                <span>29</span>
-              </div>
-              
-              <div class="sixth">
-                <span>30</span>
-                <span>31</span>
-                <span class="last-month_b">01</span>
-                <span class="last-month_b">02</span>
-                <span class="last-month_b">03</span>
-                <span class="last-month_b">04</span>
-                <span class="last-month_b">05</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-
-
-        <div class="back_b" id="dados" style="display:none">
-          <input placeholder="What's the event?">
-          <div class="info_b">
-            <div class="date_b">
-              <p class="info-date">
-              Data: <span>07/05/2021</span>
-              </p>
-			  <p class="info-date">
-              Hora: <span>15:30:00</span>
-            </div>
-            <div class="address">
-             <p>
-                Servi&ccedil;o: <span>Corte de Cabelo</span>
-              </p>
-            </div>
-            <div class="profissional">
-              <p>
-                Profissional: <span>Juca</span>
-              </p>
-            </div>
-            <div class="pagamento">
-              <p>
-                Pre&ccedil;o: <span>R$15,99</span>
-              </p>
-            </div>
-            <div class="observations">
-              <p>
-                Observa&ccedil;&otilde;es: <span>Com a Barba</span>
-              </p>
-            </div>
-          </div>
-
-          <div>
-            &nbsp&nbsp&nbsp&nbsp<button class="btn btn-default">
-              Salvar <i class="ion-checkmark"></i>
-            </button>
-            &nbsp&nbsp&nbsp&nbsp<span class="btn btn-danger" onclick="cancela()">
-              Cancelar <i class="ion-android-close"></i>
-            </span>
-            <br>
-            &nbsp
-          </div>
-        </div>
-
-      </div>
-    </div>
-				
-				
-				
-				
-				
-				
-				
-				
-				
+						<c:set var = "cont" value = "1"/>
+			            <div class="weeks_b">
+			              <div class="first">
+			              	<c:if test="${diaPrimeiroSemana == 'DOM' }"> 
+			              		<span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span> 
+			              	</c:if>
+			              	<c:if test="${diaPrimeiroSemana == 'SEG' }">
+			                	<span class="last-month" style="color:#2B4450">00</span>
+			                	<span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			                </c:if>
+			              	<c:if test="${diaPrimeiroSemana == 'TER' }">
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+							</c:if>
+			              	<c:if test="${diaPrimeiroSemana == 'QUA' }">
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+							</c:if>
+			              	<c:if test="${diaPrimeiroSemana == 'QUI' }">
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+							</c:if>
+			              	<c:if test="${diaPrimeiroSemana == 'SEX' }">
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span>0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+							</c:if>
+			              	<c:if test="${diaPrimeiroSemana == 'SAB' }">
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span class="last-month" style="color:#2B4450">00</span>
+								<span>0${cont }</span>
+								<c:set var = "cont" value = "${cont + 1 }"/>
+							</c:if>
+			              </div>
+			              
+			              <div class="second">
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			              </div>
+			
+			              <div class="third">
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			              </div>
+			
+			              <div class="fourth">
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			              </div>
+			
+			              <div class="fifth">
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			              </div>
+			              
+			              <div class="sixth">
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			              </div>
+			            </div>
+			          </div>
+			        </div>	
+			
+			        <div class="back_b" id="dados" style="display:none">
+			          <input placeholder="Insira seu nome." value="${usuario.nome }">
+			          <div class="info_b">
+			            <div class="date_b">
+			              <p class="info-date">
+			              Data: <span>07/05/2021</span>
+			              </p>
+						  <p class="info-date">
+			              Hora: <span>15:30:00</span>
+			            </div>
+			            <div class="address">
+			             <p>
+			                Servi&ccedil;o: <span>Corte de Cabelo</span>
+			              </p>
+			            </div>
+			            <div class="profissional">
+			              <p>
+			                Profissional: <span>Juca</span>
+			              </p>
+			            </div>
+			            <div class="pagamento">
+			              <p>
+			                Pre&ccedil;o: <span>R$15,99</span>
+			              </p>
+			            </div>
+			            <div class="observations">
+			              <p>
+			                Observa&ccedil;&otilde;es: <span>Com a Barba</span>
+			              </p>
+			            </div>
+			          </div>
+			
+			          <div>
+			            &nbsp&nbsp&nbsp&nbsp<button class="btn btn-default">
+			              Salvar <i class="ion-checkmark"></i>
+			            </button>
+			            &nbsp&nbsp&nbsp&nbsp<span class="btn btn-danger" onclick="cancela()">
+			              Cancelar <i class="ion-android-close"></i>
+			            </span>
+			            <br>
+			            &nbsp
+			          </div>
+			        </div>
+			      </div>
+			    </div>				
 			</div> <!-- end col -->
 		</div>  <!-- end row -->
-		
-
-		
-		
-		
-		
 	</div>
 <!-- end col-12 -->
 </div> <!-- end row -->
 </form>
 
+<br>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="container_b">
+			<input class="btn btn-primary" onclick="mudaMes('anterior')" value="Anterior" > &nbsp&nbsp
+			<input class="btn btn-primary" onclick="mudaMes('proximo')" value="Pr&oacute;ximo">
+		</div>
+	</div>
+</div>
 
+<form action="/agendamento" id="mudaMesSub" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+	<input type="hidden" name="proximo" id="proximo" value="0" />
+	<input type="hidden" name="anterior" id="anterior" value="0" />
+	<input type="hidden" name="mesAtual" value="${mesSelecionado }" />
+</form>
 
 <script>
+
+function mudaMes(mes){
+	if(mes == 'proximo'){
+		document.getElementById("proximo").value=1;
+		document.getElementById("anterior").value=0;
+	}else{
+		document.getElementById("proximo").value=0;
+		document.getElementById("anterior").value=1;
+	}
+	document.getElementById("mudaMesSub").submit();
+}
 
 function cancela(){
 	document.getElementById("calendario").style.display = "block";
