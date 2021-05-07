@@ -731,6 +731,9 @@ public class SistemaController {
 		
 		@RequestMapping(value = "/agendamento", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
 		public ModelAndView agendamento(Boolean proximo, Boolean anterior, Integer mesAtual  ) throws SQLException, ParseException {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");	
+		    Calendar calendar = new GregorianCalendar();
+		    
 			if(proximo != null && proximo) {
 				mesSelecionado = mesSelecionado+1;
 				if(mesSelecionado > 12) {
@@ -743,7 +746,9 @@ public class SistemaController {
 					mesSelecionado = 12;
 				}
 			}
-			if(proximo == null && anterior == null ) {
+			if((proximo == null && anterior == null) || calendar.get(Calendar.MONTH) == (mesSelecionado-1) ) {
+				proximo = null;
+				anterior = null;
 				resetaMes();
 			}
 			
@@ -759,9 +764,7 @@ public class SistemaController {
 				int maxDiasMes = 28;
 				List<Integer> listaDias = new ArrayList<Integer>();
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");	
-			    Calendar calendar = new GregorianCalendar();
-			    int ano = calendar.get(Calendar.YEAR);
+				int ano = calendar.get(Calendar.YEAR);
 			    int mes = 0;
 			    int dia = 1;
 			    
@@ -774,7 +777,6 @@ public class SistemaController {
 			    	dia = 1;
 			    }
 			     
-			    int semanaVal  = calendar.get(Calendar.DAY_OF_WEEK);
 			    String semana = "";
 			    String mesStr = "";
 			    
@@ -789,8 +791,12 @@ public class SistemaController {
 			    //Primeiro dia da semana do mes:
 			    String diaPrimeiroSemana = "---";
 			    GregorianCalendar gc = new GregorianCalendar();
-			    gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
-			    
+			    if((proximo == null && anterior == null) || calendar.get(Calendar.MONTH) == (mesSelecionado-1) ) {
+			    	gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(diaVal+"/"+mes+"/"+ano));
+			    } else {
+			    	gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
+			    }
+			    int semanaVal  = gc.get(Calendar.DAY_OF_WEEK);
 			    
 			    switch (gc.get(Calendar.DAY_OF_WEEK)) {
 		            case Calendar.SUNDAY:

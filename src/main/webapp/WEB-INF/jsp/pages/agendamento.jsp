@@ -451,8 +451,8 @@ function redirecionar(link){
 <div class="row">
 	<div class="col-lg-12">
 		<div class="container_b">
-			<input class="btn btn-primary" onclick="mudaMes('anterior')" value="Anterior" > &nbsp&nbsp
-			<input class="btn btn-primary" onclick="mudaMes('proximo')" value="Pr&oacute;ximo">
+			<input class="btn btn-primary" id="btProximo" onclick="mudaMes('anterior')" value="Anterior" > &nbsp&nbsp
+			<input class="btn btn-primary" id="btAnterior" onclick="mudaMes('proximo')" value="Pr&oacute;ximo">
 		</div>
 	</div>
 </div>
@@ -479,6 +479,8 @@ function mudaMes(mes){
 function cancela(){
 	document.getElementById("calendario").style.display = "block";
 	document.getElementById("dados").style.display = "none";
+	document.getElementById("btProximo").style.display = "block";
+	document.getElementById("btAnterior").style.display = "block";
 	app.swap();
 }
 
@@ -510,6 +512,8 @@ var app = {
 		settings.days.on('click', function(){
 			document.getElementById("calendario").style.display = "none";
 			document.getElementById("dados").style.display = "block";
+			document.getElementById("btProximo").style.display = "none";
+			document.getElementById("btAnterior").style.display = "none";
 			instance.swap(settings.calendar, settings.form);
 			settings.input.focus();
 		});
