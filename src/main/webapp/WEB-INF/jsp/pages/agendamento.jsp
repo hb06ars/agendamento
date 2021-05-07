@@ -1,0 +1,481 @@
+<!-- HEADER -->
+<jsp:include page="includes/header.jsp" />
+<!-- HEADER -->
+<!-- TAGS -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+<!-- TAGS -->
+<!-- INICIO BODY -->
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+  list-style: none;
+  margin: 0;
+  outline: none;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+body, html {
+  height: 100%;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
+.container_b {
+	align-items: center;
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	margin: 0 auto;
+	max-width: 100%;
+	width: 100%;
+}
+
+.calendar_b {
+	background: #2b4450;
+	border-radius: 4px;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, .3);
+	height: 100%;
+    perspective: 1000;
+	transition: .9s;
+	transform-style: preserve-3d;
+	width: 100%;
+}
+
+/* Front - Calendar */
+.front_b {
+	transform: rotateY(0deg);
+}
+
+.current-date_b {
+	border-bottom: 1px solid rgba(73, 114, 133, .6);
+	display: flex;
+	justify-content: space-between;
+	padding: 30px 40px;
+}
+
+.current-date_b h1 {
+	color: #dfebed;
+	font-size: 1.4em;
+	font-weight: 300;
+}
+
+.week-days_b {
+	color: #dfebed;
+	display: flex;
+	justify-content: space-between;
+	font-weight: 600;
+	padding: 30px 40px;
+}
+
+.days_b {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.weeks_b {
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	padding: 0 40px;
+}
+
+.weeks_b div {
+	display: flex;
+	font-size: 1.2em;
+	font-weight: 300;
+	justify-content: space-between;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.last-month_b {
+	opacity: .3;
+}
+
+.weeks_b span {
+	padding: 10px;
+}
+
+.weeks_b span.active {
+	background: #f78536;
+	border-radius: 50%;
+}
+
+.weeks_b span:not(.last-month):hover {
+	cursor: pointer;
+	font-weight: 600;
+}
+
+.event_b {
+	position: relative;
+}
+
+.event_b:after {
+	content: '•';
+	color: #f78536;
+	font-size: 1.4em;
+	position: absolute;
+	right: -4px;
+	top: -4px;
+}
+
+/* Back - Event form */
+
+.back_b {
+	height: 100%;
+	transform: rotateY(180deg);
+}
+
+.back_b input {
+	background: none;
+	border: none;
+	border-bottom: 1px solid rgba(73, 114, 133, .6);
+	color: #dfebed;
+	font-size: 1.4em;
+	font-weight: 300;
+	padding: 30px 40px;
+	width: 100%;
+}
+
+.info_b {
+	color: #dfebed;
+	display: flex;
+	flex-direction: column;
+	font-weight: 600;
+	font-size: 1.2em;
+	padding: 30px 40px;
+}
+
+.info_b div:not(.observations) {
+	margin-bottom: 40px;
+}
+
+.info_b span {
+	font-weight: 300;
+}
+
+.info_b .date {
+	display: flex;
+	justify-content: space-between;
+}
+
+.info_b .date p {
+	width: 50%;
+}
+
+.info_b .address p {
+	width: 100%;
+}
+
+.actions_b {
+	bottom: 0;
+	border-top: 1px solid rgba(73, 114, 133, .6);
+	display: flex;
+	justify-content: space-between;
+	position: absolute;
+	width: 100%;
+}
+
+.actions_b button {
+	background: none;
+	border: 0;
+	color: #fff;
+	font-weight: 600;
+	letter-spacing: 3px;
+	margin: 0;
+	padding: 30px 0;
+	text-transform: uppercase;
+	width: 50%;
+}
+
+.actions_b button:first-of-type {
+	border-right: 1px solid rgba(73, 114, 133, .6);
+}
+
+.actions_b button:hover {
+	background: #497285;
+	cursor: pointer;
+}
+
+.actions_b button:active {
+	background: #5889a0;
+	outline: none;
+}
+
+/* Flip animation */
+
+.flip_b {
+	transform: rotateY(180deg);
+}
+
+.front_b, .back_b {
+	backface-visibility: hidden;
+}
+
+
+</style>
+
+
+<!-- Script -->
+<script>
+function redirecionar(link){
+	window.location.href=link;
+}
+
+
+
+
+
+
+</script>
+<!-- Script -->
+			
+									    	
+<!-- start: page -->
+<form class="form-horizontal m-t-20" action="/agendamento" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+<div class="row">
+	<div class="col-lg-12">
+		<div class="row">
+			<div class="col-md-12">
+				
+				
+				
+				
+				
+				
+				
+
+    <div class="container_b">
+      <div class="calendar_b">
+        <div class="front_b" id="calendario" style="display:block">
+          <div class="current-date_b">
+            <h1>Dia 15: Sexta-Feira</h1>
+            <h1>Mar&ccedil;o 2021</h1>	
+          </div>
+
+          <div class="current-month">
+            <ul class="week-days_b">
+              <li>DOM</li>
+              <li>SEG</li>
+              <li>TER</li>
+              <li>QUA</li>
+              <li>QUI</li>
+              <li>SEX</li>
+              <li>SAB</li>
+            </ul>
+
+            <div class="weeks_b">
+              <div class="first">
+                <span class="last-month_b">26</span>
+                <span class="last-month_b">27</span>
+                <span class="last-month_b">28</span>
+                <span class="last-month_b">29</span>
+                <span class="last-month_b">30</span>
+                <span class="last-month_b">31</span>
+                <span>01</span>
+              </div>
+
+              <div class="second">
+                <span>02</span>
+                <span class="event">03</span>
+                <span>04</span>
+                <span>05</span>
+                <span>06</span>
+                <span>07</span>
+                <span>08</span>
+              </div>
+
+              <div class="third">
+                <span>09</span>
+                <span>10</span>
+                <span>11</span>
+                <span class="active">12</span>
+                <span>13</span>
+                <span>14</span>
+                <span>15</span>
+              </div>
+
+              <div class="fourth">
+                <span>16</span>
+                <span>17</span>
+                <span>18</span>
+                <span>19</span>
+                <span>20</span>
+                <span>21</span>
+                <span>22</span>
+              </div>
+
+              <div class="fifth">
+                <span>23</span>
+                <span>24</span>
+                <span>25</span>
+                <span>26</span>
+                <span>27</span>
+                <span>28</span>
+                <span>29</span>
+              </div>
+              
+              <div class="sixth">
+                <span>30</span>
+                <span>31</span>
+                <span class="last-month_b">01</span>
+                <span class="last-month_b">02</span>
+                <span class="last-month_b">03</span>
+                <span class="last-month_b">04</span>
+                <span class="last-month_b">05</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <div class="back_b" id="dados" style="display:none">
+          <input placeholder="What's the event?">
+          <div class="info_b">
+            <div class="date_b">
+              <p class="info-date">
+              Data: <span>07/05/2021</span>
+              </p>
+			  <p class="info-date">
+              Hora: <span>15:30:00</span>
+            </div>
+            <div class="address">
+             <p>
+                Servi&ccedil;o: <span>Corte de Cabelo</span>
+              </p>
+            </div>
+            <div class="profissional">
+              <p>
+                Profissional: <span>Juca</span>
+              </p>
+            </div>
+            <div class="pagamento">
+              <p>
+                Pre&ccedil;o: <span>R$15,99</span>
+              </p>
+            </div>
+            <div class="observations">
+              <p>
+                Observa&ccedil;&otilde;es: <span>Com a Barba</span>
+              </p>
+            </div>
+          </div>
+
+          <div>
+            &nbsp&nbsp&nbsp&nbsp<button class="btn btn-default">
+              Salvar <i class="ion-checkmark"></i>
+            </button>
+            &nbsp&nbsp&nbsp&nbsp<span class="btn btn-danger" onclick="cancela()">
+              Cancelar <i class="ion-android-close"></i>
+            </span>
+            <br>
+            &nbsp
+          </div>
+        </div>
+
+      </div>
+    </div>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+			</div> <!-- end col -->
+		</div>  <!-- end row -->
+		
+
+		
+		
+		
+		
+	</div>
+<!-- end col-12 -->
+</div> <!-- end row -->
+</form>
+
+
+
+<script>
+
+function cancela(){
+	document.getElementById("calendario").style.display = "block";
+	document.getElementById("dados").style.display = "none";
+	app.swap();
+}
+
+
+var app = {
+	settings: {
+		container: $('.calendar_b'),
+		calendar: $('.front_b'),
+		days: $('.weeks_b span'),
+		form: $('.back_b'),
+		input: $('.back_b input'),
+		buttons: $('.back_b button')
+	},
+
+	init: function() {
+		instance = this;
+		settings = this.settings;
+		this.bindUIActions();
+	},
+
+	swap: function(currentSide, desiredSide) {
+		settings.container.toggleClass('flip_b');
+		currentSide.fadeOut(900);
+		currentSide.hide();
+		desiredSide.show();
+	},
+
+	bindUIActions: function() {
+		settings.days.on('click', function(){
+			document.getElementById("calendario").style.display = "none";
+			document.getElementById("dados").style.display = "block";
+			instance.swap(settings.calendar, settings.form);
+			settings.input.focus();
+		});
+
+		settings.buttons.on('click', function(){
+			document.getElementById("calendario").style.display = "block";
+			document.getElementById("dados").style.display = "none";
+			instance.swap(settings.form, settings.calendar);
+		});
+	}
+}
+
+app.init();
+</script>
+
+
+<!-- end: page -->
+
+
+
+
+<!-- FOOTER -->
+<jsp:include page="includes/footerSemData.jsp" />
+<!-- FOOTER -->
