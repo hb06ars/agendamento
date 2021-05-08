@@ -160,7 +160,7 @@ function editar(id){
 							<span class="input-group-addon">
 								<i class="fa fa-birthday-cake"></i>
 							</span>
-							<input type="date" name="dataNascimento" id="dataNascimento" class="form-control" required/>
+							<input type="date" name="dataNascimento" id="dataNascimento" class="form-control" />
 						</div>
 					</div>
 					<div class="col-md-4 form-group">

@@ -2,14 +2,12 @@ package brandaoti.sistema.model;
 
 import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -69,9 +67,6 @@ public class Usuario {
 	@OneToOne
 	private Perfil perfil;
 
-	@OneToOne
-	private Preco grupo;
-	
 	@Column
 	private String pathImagem = "/assets/images/imagemUsuario.png";
 	
@@ -207,13 +202,6 @@ public class Usuario {
 	}
 
 	
-	public Preco getGrupo() {
-		return grupo;
-	}
-
-	public void setGrupo(Preco grupo) {
-		this.grupo = grupo;
-	}
 
 	public String getPathImagem() {
 		return pathImagem;

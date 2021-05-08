@@ -64,6 +64,38 @@
         <script src="/assets/plugins/moment/moment.js"></script>
         <script src="/assets/plugins/fullcalendar/js/fullcalendar.min.js"></script>
         <script src="/assets/pages/jquery.fullcalendar.js"></script>
+        
+        
+        <!-- SELECT2 -->
+        <script src="/assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.min.js"></script>
+        <script src="/assets/plugins/switchery/js/switchery.min.js"></script>
+        <script type="text/javascript" src="/assets/plugins/multiselect/js/jquery.multi-select.js"></script>
+        <script type="text/javascript" src="/assets/plugins/jquery-quicksearch/jquery.quicksearch.js"></script>
+        <script src="/assets/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+        <script src="/assets/plugins/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
+        <script src="/assets/plugins/bootstrap-filestyle/js/bootstrap-filestyle.min.js" type="text/javascript"></script>
+        <script src="/assets/plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js" type="text/javascript"></script>
+        <script src="/assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="/assets/plugins/autocomplete/jquery.mockjax.js"></script>
+        <script type="text/javascript" src="/assets/plugins/autocomplete/jquery.autocomplete.min.js"></script>
+        <script type="text/javascript" src="/assets/plugins/autocomplete/countries.js"></script>
+        <script type="text/javascript" src="/assets/pages/autocomplete.js"></script>
+        <script type="text/javascript" src="/assets/pages/jquery.form-advanced.init.js"></script>
+        <!-- SELECT2 -->
+        
+        
+        <!-- TIMER -->
+        <script src="/assets/plugins/moment/moment.js"></script>
+     	<script src="/assets/plugins/timepicker/bootstrap-timepicker.js"></script>
+     	<script src="/assets/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+     	<script src="/assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+     	<script src="/assets/plugins/clockpicker/js/bootstrap-clockpicker.min.js"></script>
+     	<script src="/assets/plugins/bootstrap-daterangepicker/daterangepicker.js"></script>
+     	<script src="/assets/pages/jquery.form-pickers.init.js"></script>
+        <!-- TIMER -->
+        
+        
+        
 
 	
 	</body>

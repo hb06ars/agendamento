@@ -118,7 +118,6 @@ function editar(id){
 			document.getElementById("estado").value = '${u.estado}';
 			document.getElementById("cep").value = '${u.cep}';
 			document.getElementById("pathImagem").value = '${u.pathImagem}';
-			document.getElementById("grupo").value = '${u.grupo.id}';
 		}
 	</c:forEach>
 
@@ -135,98 +134,6 @@ function editar(id){
 
 
 
-<div id="tabelaContrato" style="display:none;">
-<table border="1"> 
-            <tr>
-                <th colspan="6"><b>CONTRATO ACADEMIA</b><br></br></th>
-            </tr>
-            <tr>
-                <td colspan="6">&nbsp</td>
-            </tr>
-            <tr>
-                <td colspan="6"><b>Cliente</b> </td>
-            </tr>
-            <tr>
-                <td>Matrícula: </td><td colspan="2" id="co_matricula">-</td>
-                <td>CPF: </td><td colspan="2" id="co_cpf">-</td>
-            </tr>
-            <tr>
-                <td>Nome: </td><td colspan="2" id="co_nome">-</td>
-                <td>Nasc: </td><td colspan="2" id="co_nasc">-</td>
-            </tr>
-            <tr>
-                <td>Tel: </td><td colspan="2" id="co_tel">-</td>
-                <td>Cel: </td><td colspan="2" id="co_cel">-</td>
-            </tr>
-            <tr>
-                <td>Email: </td><td colspan="5" id="co_email">-</td>
-            </tr>
-            <tr>
-                <td>Endereço: </td><td colspan="2" id="co_endereco">-</td>
-                <td>Bairro: </td><td colspan="2" id="co_bairro">-</td>
-            </tr>
-            <tr>
-                <td>Cidade: </td><td colspan="2" id="co_cidade">-</td>
-                <td>Estado: </td><td colspan="2" id="co_estado">-</td>
-            </tr>
-            <tr>
-                <td>CEP: </td><td colspan="5" id="co_cep">-</td>
-            </tr>
-            <tr>
-                <td colspan="6">&nbsp</td>
-            </tr>
-            <tr>
-                <td colspan="6"><b>Contrato</b> </td>
-            </tr>
-            <tr>
-                <td>Grupo: </td><td colspan="5" id="co_grupo">-</td>
-            </tr>
-            <tr>
-                <td>Obs: </td><td colspan="5" id="co_obs">-</td>
-            </tr>
-            <tr>
-                <td>Início Contrato: </td><td colspan="2" id="co_inicio">-</td>
-                <td>Fim Contrato: </td><td colspan="2" id="co_fim">-</td>
-            </tr>
-            <tr>
-                <td>Total Contrato: </td><td colspan="5" id="co_totalContrato">-</td>
-            </tr>
-            <tr>
-                <td>Sinal: </td><td colspan="2" style="color:red" id="co_sinal">-</td>
-                <td>Desconto: </td><td colspan="2" style="color:red" id="co_desconto">-</td>
-            </tr>
-            <tr>
-                <td><b>Total a Pagar: </b></td><td colspan="5" id="co_total"><b>-</b></td>
-            </tr>
-            <tr>
-                <td colspan="6">&nbsp</td>
-            </tr>
-             <tr>
-                <td colspan="6"><b>Formas de Pagamento</b> </td>
-            </tr>
-            <tr>
-                <td>Parcelas: </td><td id="co_parcelas">-</td>
-                <td>Vencimento dia: </td><td id="co_vencimento">-</td>
-                <td>Valor da Parcela: </td><td id="co_valorDaParcela">-</td>
-            </tr>
-            <tr>
-                <td colspan="6">&nbsp</td>
-            </tr>
-             <tr>
-                <td colspan="6"><b>Assinatura</b> </td>
-            </tr>
-            <tr>
-                <td ><br><br>______________________________________ <br> <div  id="co_nomeCliente" align="center">-</div></td>
-                <td colspan="4">&nbsp</td>
-                 <td><br><br>______________________________________ <br> <div align="center">${usuario.nome}</div></td>
-            </tr>
-            <tr>
-                <td colspan="6"><div id="dataHojeContrato" align="center"></div> </td>
-            </tr>
-            
-            <tr>
-        </table>
-</div>
 
 
 
@@ -261,7 +168,7 @@ function editar(id){
 							<span class="input-group-addon">
 								<i class="fa fa-birthday-cake"></i>
 							</span>
-							<input type="date" name="dataNascimento" id="dataNascimento" class="form-control" required/>
+							<input type="date" name="dataNascimento" id="dataNascimento" class="form-control" />
 						</div>
 					</div>
 					<div class="col-md-4 form-group">

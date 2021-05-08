@@ -29,6 +29,10 @@ a {
   text-decoration: none;
 }
 
+.select2-container--default .select2-selection--single{
+	background-color:#2B4450;
+}
+
 body, html {
   height: 100%;
 }
@@ -277,49 +281,49 @@ function redirecionar(link){
 			            <div class="weeks_b">
 			              <div class="first">
 			              	<c:if test="${diaPrimeiroSemana == 'DOM' }"> 
-			              		<span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span> 
+			              		<span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span> 
 			              	</c:if>
 			              	<c:if test="${diaPrimeiroSemana == 'SEG' }">
 			                	<span class="last-month" style="color:#2B4450">00</span>
-			                	<span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+			                	<span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
 			                </c:if>
 			              	<c:if test="${diaPrimeiroSemana == 'TER' }">
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
-								<span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+								<span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
 							</c:if>
 			              	<c:if test="${diaPrimeiroSemana == 'QUA' }">
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
-								<span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+								<span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
 							</c:if>
 			              	<c:if test="${diaPrimeiroSemana == 'QUI' }">
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
-								<span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+								<span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
 							</c:if>
 			              	<c:if test="${diaPrimeiroSemana == 'SEX' }">
 								<span class="last-month" style="color:#2B4450">00</span>
@@ -327,8 +331,8 @@ function redirecionar(link){
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
-								<span>0${cont }</span>
-			              		<c:set var = "cont" value = "${cont + 1 }"/><span>0${cont }</span>
+								<span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
+			              		<c:set var = "cont" value = "${cont + 1 }"/><span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
 							</c:if>
 			              	<c:if test="${diaPrimeiroSemana == 'SAB' }">
 								<span class="last-month" style="color:#2B4450">00</span>
@@ -337,95 +341,156 @@ function redirecionar(link){
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
 								<span class="last-month" style="color:#2B4450">00</span>
-								<span>0${cont }</span>
+								<span onclick="valorData('0${cont}/${mesNumero}/${ano}')" >0${cont }</span>
 								<c:set var = "cont" value = "${cont + 1 }"/>
 							</c:if>
 			              </div>
-			              
+			              <c:if test="${diaPrimeiroSemana != 'SAB' }">
+			              	<c:set var = "cont" value = "${cont + 1 }"/>
+			              </c:if>
 			              <div class="second">
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
 			              </div>
 			
 			              <div class="third">
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> <c:if test="${cont < 10 }">0</c:if>${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
 			              </div>
 			
 			              <div class="fourth">
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
-			                <span <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
+			                <span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if>> ${cont }<c:set var = "cont" value = "${cont + 1 }"/></span>
 			              </div>
 			
 			              <div class="fifth">
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450" >00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
 			              </div>
 			              
 			              <div class="sixth">
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
-			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
+			                <c:if test="${cont > maxDiasMes}"><span class="last-month" style="color:#2B4450">00</span></c:if> <c:if test="${cont <= maxDiasMes}"><span onclick="valorData('<c:if test="${cont < 10 }">0</c:if>${cont}/${mesNumero}/${ano}')" <c:if test="${cont == dia }">class="active"</c:if> >${cont }<c:set var = "cont" value = "${cont + 1 }"/></span></c:if>
 			              </div>
 			            </div>
 			          </div>
 			        </div>	
 			
 			        <div class="back_b" id="dados" style="display:none">
-			          <input placeholder="Insira seu nome." value="${usuario.nome }">
+			        
+			        <div class="row">
+						<div class="col-lg-6">
+							<c:if test="${usuario.perfil.funcionario }">
+								<input placeholder="Insira o nome do Cliente." value="">
+							</c:if>
+							<c:if test="${!usuario.perfil.funcionario }">
+								<input placeholder="Insira seu nome." value="${usuario.nome }">
+							</c:if>
 			          <div class="info_b">
 			            <div class="date_b">
 			              <p class="info-date">
-			              Data: <span>07/05/2021</span>
+			              Data: <span id="dataTexto"> - </span>
 			              </p>
 						  <p class="info-date">
-			              Hora: <span>15:30:00</span>
+			              <span>
+							<label>Hora:</label>
+							<input onchange="verDisponibilidade()" style="font-size:18px; background-color:#2B4450; max-width: 180px; max-height: 1px;" type="time" id="horaEscolhida" name="horaEscolhida" required>
+							<i id="disponibilidadeTexto" style="display:none; color:#74DF00">Dispon&iacute;vel</i>
+							<i id="indisponibilidadeTexto" style="display:none; color:#F78181">Indispon&iacute;vel</i>
+						  </span>
 			            </div>
 			            <div class="address">
-			             <p>
-			                Servi&ccedil;o: <span>Corte de Cabelo</span>
-			              </p>
+				             <p>
+				                Servi&ccedil;o: 
+				                <select class="form-control select2" id="servicoSelecionado" onchange="atualizaPreco()">
+					                <option>Selecione o Servi&ccedil;o</option>
+				                    	<c:forEach items="${precos }" var="p">
+				                    		<option value="${p.id }">${p.nome } (R$${p.preco })</option>
+				                    	</c:forEach>
+				                </select>
+				             </p>
 			            </div>
 			            <div class="profissional">
 			              <p>
-			                Profissional: <span>Juca</span>
+			                Profissional: 
+			                <select class="form-control select2" id="profissionalSelecionado" style="background-color:#2B4450" onchange="atualizaDisponibilidade()">
+				                		<option value="" <c:if test="${!usuario.perfil.funcionario }">selected</c:if> >Qualquer um.</option>
+			                    	<c:forEach items="${funcionarios }" var="f">
+			                    		<option value="${f.id }" <c:if test="${f.id == usuario.id }">selected</c:if> >${f.nome }</option>
+			                    	</c:forEach>
+			                </select>
 			              </p>
 			            </div>
 			            <div class="pagamento">
 			              <p>
-			                Pre&ccedil;o: <span>R$15,99</span>
+			                Pre&ccedil;o: <span id="precoTexto"> - </span>
 			              </p>
 			            </div>
 			            <div class="observations">
 			              <p>
-			                Observa&ccedil;&otilde;es: <span>Com a Barba</span>
+			                Observa&ccedil;&otilde;es: 
+			                <span>
+								<input style="background-color:#2B4450; font-size:18px; max-height: 1px;" type="text" id="obs" name="obs" required>
+							</span>
 			              </p>
 			            </div>
 			          </div>
+						</div>
+						<div class="col-lg-6">
+							<input value="Disponibilidade" readonly>
+							
+							
+							<div class="p-20">
+												<table class="table m-0" id="tabDisponibilidade">
+													
+													<thead>
+														<tr>
+															<th>Inicio</th>
+															<th>Fim</th>
+															<th>Profissional</th>
+															<th>Status</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr>
+															
+														</tr>
+													</tbody>
+												</table>
+											</div>
+											<br>
+							
+						</div>
+			        </div>
+			        
+			        
+			        
+			          
 			
 			          <div>
 			            &nbsp&nbsp&nbsp&nbsp<button class="btn btn-default">
@@ -445,6 +510,10 @@ function redirecionar(link){
 	</div>
 <!-- end col-12 -->
 </div> <!-- end row -->
+
+
+<input type="hidden" id="dataSubmit" name="dataSubmit">
+
 </form>
 
 <br>
@@ -464,6 +533,118 @@ function redirecionar(link){
 </form>
 
 <script>
+
+function valorData(data){
+	document.getElementById("dataTexto").innerHTML=data;
+	document.getElementById("dataSubmit").innerHTML=data;
+}
+
+function compararHora(horaEscolhida, horaInicio, horaFim)
+{
+	horaEscolhida = horaEscolhida.split(":");
+	horaInicio = horaInicio.split(":");
+	horaFim = horaFim.split(":");
+    var d = new Date();
+    
+    var dataEscolhida = new Date(d.getFullYear(), d.getMonth(), d.getDate(), horaEscolhida[0], horaEscolhida[1]);
+    var dataInicio = new Date(d.getFullYear(), d.getMonth(), d.getDate(), horaInicio[0], horaInicio[1]);
+    var dataFim = new Date(d.getFullYear(), d.getMonth(), d.getDate(), horaFim[0], horaFim[1]);
+    
+    var validacao = true;
+    
+    if(horaEscolhida >= horaInicio && horaEscolhida <= horaFim){
+    	validacao = false;
+    }
+    
+    return validacao;
+};
+
+function verDisponibilidade(){
+	var valido = true;
+	var profissional = document.getElementById("profissionalSelecionado").value;
+	var horaEscolhida = document.getElementById("horaEscolhida").value;
+	var data = document.getElementById("dataTexto").innerHTML;
+	<c:forEach items="${consultas }" var="c">
+		if('${c.profissional.id}' == profissional){
+			var dataFormatada = '${c.data}';
+			dataFormatada = dataFormatada.substring(8, 10) + '/' + dataFormatada.substring(5, 7) + '/' + dataFormatada.substring(0, 4);
+			if(dataFormatada == data){
+				valido = compararHora(horaEscolhida, '${c.inicioHora}', '${c.fimHora}');
+				if(valido){
+					document.getElementById("disponibilidadeTexto").style.display = "block";
+					document.getElementById("indisponibilidadeTexto").style.display = "none";
+				} else{
+					document.getElementById("disponibilidadeTexto").style.display = "none";
+					document.getElementById("indisponibilidadeTexto").style.display = "block";
+				}
+			}
+		}
+	</c:forEach>
+
+	
+}
+
+function atualizaDisponibilidade(){
+	// TABELA
+	document.getElementById("horaEscolhida").value="--:--";
+	var table = document.getElementById("tabDisponibilidade");
+	var linhas = parseInt(table.getElementsByTagName('tr').length);
+	//Limpando
+	if(linhas > 1){
+		for(var i = 1; i <= (linhas - 1); i++){
+			table.deleteRow(i);
+		}
+	}
+	//Inserindo
+	var cont=1;
+	var profissional = document.getElementById("profissionalSelecionado").value;
+	var data = document.getElementById("dataTexto").innerHTML;
+	<c:forEach items="${consultas }" var="c">
+		if('${c.profissional.id}' == profissional){
+			var dataFormatada = '${c.data}';
+			dataFormatada = dataFormatada.substring(8, 10) + '/' + dataFormatada.substring(5, 7) + '/' + dataFormatada.substring(0, 4);
+			if(dataFormatada == data){
+				var row = table.insertRow(cont);
+				var cell0 = row.insertCell(0);
+				var cell1 = row.insertCell(1);
+				var cell2 = row.insertCell(2);
+				var cell3 = row.insertCell(3);
+				cell0.innerHTML = '${c.inicioHora}';
+				cell1.innerHTML = '${c.fimHora}';
+				cell2.innerHTML = '${c.profissional.nome}';
+				if(${c.confirmado}){
+					cell3.innerHTML = 'Ocupado';	
+					cell3.style.color = "#F5A9A9";
+				} else{
+					cell3.innerHTML = 'Aguardando';
+					cell3.style.color = "#FAAC58";
+				}
+				cell0.style.color = "#FFFFFF";
+				cell1.style.color = "#FFFFFF";
+				cell2.style.color = "#FFFFFF";
+				cont++;
+			}
+			
+			
+			
+		}	
+	</c:forEach>
+	
+	
+}
+
+function atualizaPreco(){
+	var preco;
+	var servicoSelecionado = document.getElementById("servicoSelecionado").value;
+	<c:forEach items="${precos}" var="p">
+		if('${p.id}' == servicoSelecionado){
+			preco = document.getElementById("precoTexto").innerHTML='${p.preco}';
+			preco = preco.replace('.',',');
+			document.getElementById("precoTexto").innerHTML='R$'+preco;
+		}
+	</c:forEach>
+	
+}
 
 function mudaMes(mes){
 	if(mes == 'proximo'){
@@ -510,12 +691,15 @@ var app = {
 
 	bindUIActions: function() {
 		settings.days.on('click', function(){
+			atualizaDisponibilidade();
 			document.getElementById("calendario").style.display = "none";
 			document.getElementById("dados").style.display = "block";
 			document.getElementById("btProximo").style.display = "none";
 			document.getElementById("btAnterior").style.display = "none";
 			instance.swap(settings.calendar, settings.form);
 			settings.input.focus();
+			atualizaDisponibilidade();
+			
 		});
 
 		settings.buttons.on('click', function(){

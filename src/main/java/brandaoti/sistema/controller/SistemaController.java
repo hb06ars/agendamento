@@ -34,6 +34,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import brandaoti.sistema.dao.AssuntoDao;
 import brandaoti.sistema.dao.ChamadoDao;
+import brandaoti.sistema.dao.ConsultaDao;
 import brandaoti.sistema.dao.PrecoDao;
 import brandaoti.sistema.dao.PerfilDao;
 import brandaoti.sistema.dao.StatusChamadoDao;
@@ -45,6 +46,8 @@ import brandaoti.sistema.model.Perfil;
 import brandaoti.sistema.model.StatusChamado;
 import brandaoti.sistema.model.Assunto;
 import brandaoti.sistema.model.Chamado;
+import brandaoti.sistema.model.Consulta;
+import brandaoti.sistema.model.Consulta;
 import brandaoti.sistema.model.Preco;
 import brandaoti.sistema.model.Usuario;
 
@@ -66,6 +69,8 @@ public class SistemaController {
 		private StatusChamadoDao statusChamadoDao;
 		@Autowired
 		private ChamadoDao chamadoDao;
+		@Autowired
+		private ConsultaDao consultaDao;
 		
 		public static Usuario usuarioSessao;
 		public static String atualizarPagina = null;
@@ -74,6 +79,7 @@ public class SistemaController {
 		public static String paginaAtual = "Dashboard";
 		public static String iconePaginaAtual = "fa fa-home";
 		public static Integer mesSelecionado;
+		public static Integer anoSelecionado;
 		
 		
 		
@@ -113,6 +119,7 @@ public class SistemaController {
 			Calendar calendar = new GregorianCalendar();
 			mesSelecionado = calendar.get(Calendar.MONTH);
 			mesSelecionado = mesSelecionado+1;
+			anoSelecionado = calendar.get(Calendar.YEAR);
 		}
 		
 		@RequestMapping(value = {"/","/login"}, produces = "text/plain;charset=UTF-8", method = RequestMethod.GET) // Pagina de Vendas
@@ -124,10 +131,13 @@ public class SistemaController {
 			List<Assunto> as = assuntoDao.buscarTudo();
 			List<StatusChamado> st = statusChamadoDao.buscarTudo();
 			List<Chamado> ch = chamadoDao.buscarTudo();
+			List<Consulta> consultas = consultaDao.buscarTudo();
+			
 			usuarioSessao = null;
 			
 			Calendar calendar = new GregorianCalendar();
 			mesSelecionado = calendar.get(Calendar.MONTH);
+			anoSelecionado = calendar.get(Calendar.YEAR);
 			mesSelecionado = mesSelecionado+1;
 		    
 			if(p == null || p.size() == 0) {
@@ -215,9 +225,8 @@ public class SistemaController {
 				statusChamadoDao.save(s);
 			}
 			
-			
+			// Excluir ----------------------------------------------------------------------------------------------------
 			if(u == null || u.size() == 0) {
-				// Excluir ----------------------------------------------------------------------------------------------------
 				// Henrique
 				Usuario h = new Usuario();
 				h.setAtivo(true);
@@ -275,12 +284,23 @@ public class SistemaController {
 				r.setPathImagem("https://instagram.fcgh11-1.fna.fbcdn.net/v/t51.2885-19/s150x150/147640101_432656427934162_7502532548051698688_n.jpg?_nc_ht=instagram.fcgh11-1.fna.fbcdn.net&_nc_ohc=1AwA0-HsIfEAX_ePNx8&tp=1&oh=c494c72522c18470b00e66fa92c9e1b7&oe=6052EE90");
 				r.setPerfil(perfilDao.buscarFuncionario().get(0));
 				usuarioDao.save(r);
-				
-				
-				// Excluir ----------------------------------------------------------------------------------------------------
 
 			}
 			
+			//Horario
+			if(consultas.size() == 0) {
+				Consulta hor = new Consulta();
+				hor.setCliente("Einstein");
+				hor.setData(LocalDateTime.now());
+				hor.setInicio(LocalDateTime.now());
+				hor.setFim(LocalDateTime.now());
+				hor.setObservacoes("Alguma...");
+				hor.setPreco(10.33);
+				hor.setProfissional(usuarioDao.buscarFuncionarios().get(0));
+				hor.setServico(precoDao.buscarTudo().get(0));
+				consultaDao.save(hor);
+			}
+			// Excluir ----------------------------------------------------------------------------------------------------
 			
 			logado = false;
 			String link = "index";
@@ -343,16 +363,14 @@ public class SistemaController {
 					modelAndView.addObject("grupos", grupos);
 					atualizarPagina = "/funcionarios";
 				}
-				if(tabela.equals("grupos")) {
-					link = verificaLink("pages/grupos");
+				if(tabela.equals("precos")) {
+					link = verificaLink("pages/precos");
 					modelAndView = new ModelAndView(link);
-					paginaAtual = "Cadastrar novo Grupo";
-					Preco objeto = precoDao.findById(id).get();
-					objeto.setAtivo(false);
-					precoDao.save(objeto);
+					paginaAtual = "Cadastrar novo Preço";
+					precoDao.delete(precoDao.findById(id).get());
 					List<Preco> pl = precoDao.buscarTudo();
-					modelAndView.addObject("grupos", pl);
-					atualizarPagina = "/grupos";
+					modelAndView.addObject("precos", pl);
+					atualizarPagina = "/precos";
 				}
 			}
 			modelAndView.addObject("atualizarPagina", atualizarPagina);
@@ -367,7 +385,6 @@ public class SistemaController {
 		/* SALVAR EXCEL */
 		@RequestMapping(value = "/upload/excel", method = {RequestMethod.POST, RequestMethod.GET}) // Pagina de Alteração de Perfil
 		public ModelAndView uploadExcel(Model model, String tabelaUsada, @ModelAttribute MultipartFile file) throws Exception, IOException { //Função e alguns valores que recebe...
-			System.out.println("file: "+file);
 			paginaAtual = "Home";
 			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
 			String link = verificaLink("pages/home");
@@ -485,7 +502,7 @@ public class SistemaController {
 					}
 			*/
 			}
-			System.out.println("Validado");
+			
 			return modelAndView; //retorna a variavel	
 		}
 		
@@ -587,7 +604,6 @@ public class SistemaController {
 					a.setBairro(cliente.getBairro());
 					a.setCidade(cliente.getCidade());
 					a.setEstado(cliente.getEstado());
-					a.setGrupo(cliente.getGrupo());
 					usuarioDao.save(a);
 					
 				} else if(cliente.getMatricula() != null && (acao.equals("salvar")) && repetido) {
@@ -627,7 +643,6 @@ public class SistemaController {
 						a = funcionario;
 						a.setSenha(funcionario.getCpf().replace(".", "").replace("-", ""));
 						a.setPerfil(perfilDao.buscarCodigo(perfil_codigo));
-						a.setGrupo(precoDao.buscarCodigo(grupo_codigo));
 						usuarioDao.save(a);
 						modelAndView.addObject("atualizarPagina", atualizarPagina);
 					} catch(Exception e) {
@@ -647,9 +662,7 @@ public class SistemaController {
 					a.setBairro(funcionario.getBairro());
 					a.setCidade(funcionario.getCidade());
 					a.setEstado(funcionario.getEstado());
-					a.setGrupo(funcionario.getGrupo());
 					a.setPerfil(perfilDao.buscarCodigo(perfil_codigo));
-					a.setGrupo(precoDao.buscarCodigo(grupo_codigo));
 					usuarioDao.save(a);
 				} else if(funcionario.getMatricula() != null && (acao.equals("salvar")) && repetido) {
 					modelAndView.addObject("erro", "Já existe este CPF / Matrícula.");
@@ -738,12 +751,14 @@ public class SistemaController {
 				mesSelecionado = mesSelecionado+1;
 				if(mesSelecionado > 12) {
 					mesSelecionado = 1;
+					anoSelecionado = anoSelecionado + 1;
 				}
 			}
 			if(anterior != null && anterior) {
 				mesSelecionado = mesSelecionado-1;
 				if(mesSelecionado < 1) {
 					mesSelecionado = 12;
+					anoSelecionado = anoSelecionado - 1;
 				}
 			}
 			if((proximo == null && anterior == null) || calendar.get(Calendar.MONTH) == (mesSelecionado-1) ) {
@@ -764,7 +779,7 @@ public class SistemaController {
 				int maxDiasMes = 28;
 				List<Integer> listaDias = new ArrayList<Integer>();
 				
-				int ano = calendar.get(Calendar.YEAR);
+				int ano = anoSelecionado;
 			    int mes = 0;
 			    int dia = 1;
 			    
@@ -791,6 +806,7 @@ public class SistemaController {
 			    //Primeiro dia da semana do mes:
 			    String diaPrimeiroSemana = "---";
 			    GregorianCalendar gc = new GregorianCalendar();
+			    GregorianCalendar primeiro = new GregorianCalendar();
 			    if((proximo == null && anterior == null) || calendar.get(Calendar.MONTH) == (mesSelecionado-1) ) {
 			    	gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(diaVal+"/"+mes+"/"+ano));
 			    } else {
@@ -798,7 +814,8 @@ public class SistemaController {
 			    }
 			    int semanaVal  = gc.get(Calendar.DAY_OF_WEEK);
 			    
-			    switch (gc.get(Calendar.DAY_OF_WEEK)) {
+			    primeiro.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
+			    switch (primeiro.get(Calendar.DAY_OF_WEEK)) {
 		            case Calendar.SUNDAY:
 		            	diaPrimeiroSemana = "DOM";
 		                break;
@@ -906,6 +923,7 @@ public class SistemaController {
 			  }
 			    
 		        
+			  
 		        
 		      System.out.println("Ano \t\t: " + ano);
 		      System.out.println("Mês \t\t: " + mes);
@@ -915,16 +933,30 @@ public class SistemaController {
 			  System.out.println("Primeiro dia da Semana \t: " + diaPrimeiroSemana);
 			  System.out.println("Máximo mês \t: " + maxDiasMes);
 			  System.out.println("-----------------------------------------------------------------");
-		        
+		      
+			  
 			  modelAndView.addObject("mesSelecionado", mesSelecionado);
 			  modelAndView.addObject("maxDiasMes", maxDiasMes);
 			  modelAndView.addObject("hoje", "Dia " + diaVal + ": " + semana);
 			  modelAndView.addObject("diaVal", diaVal);
 			  modelAndView.addObject("dia", dia);
 			  modelAndView.addObject("mes", mesStr);
+			  if(mes < 10) {
+				  modelAndView.addObject("mesNumero", "0"+mes);
+			  } else {
+				  modelAndView.addObject("mesNumero", mes);
+			  }
 			  modelAndView.addObject("ano", ano);
 			  modelAndView.addObject("listaDias", listaDias);
 			  modelAndView.addObject("diaPrimeiroSemana", diaPrimeiroSemana);
+			  
+			  
+			  List<Usuario> funcionarios = usuarioDao.buscarFuncionarios();
+			  modelAndView.addObject("funcionarios", funcionarios);
+			  List<Preco> precos = precoDao.buscarTudo();
+			  modelAndView.addObject("precos", precos);
+			  List<Consulta> consultas = consultaDao.buscarTudo();
+			  modelAndView.addObject("consultas", consultas);
 			    
 			}
 			return modelAndView; //retorna a variavel

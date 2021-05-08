@@ -24,7 +24,7 @@ function acao(valor){
 function cancelar(){
 
 	document.getElementById("nome").value = '';
-	
+	document.getElementById("precoValor").value = '';
 	document.getElementById("acao").value = '';
 	document.getElementById("atualizar").style.display = "none";
 	document.getElementById("salvar").style.display = "block";
@@ -133,12 +133,12 @@ function editar(id){
 										<c:forEach items="${grupos }" var="p">
 											<tr class="gradeX">
 												<td>
-													<i class="fa fa-trash" onclick="modalDeletar('grupos', ${p.id}) "></i> &nbsp
+													<i class="fa fa-trash" onclick="modalDeletar('precos', ${p.id}) "></i> &nbsp
 													<i class="fa fa-pencil" onclick="editar(${p.id }) "></i>
 												</td>
 												<td>${p.id }</td>
 												<td>${p.nome }</td>
-												<td>${p.preco }</td>
+												<td>R$${fn:replace(p.preco, '.', ',')}</td>
 											</tr>
 										</c:forEach>
 									</tbody>
