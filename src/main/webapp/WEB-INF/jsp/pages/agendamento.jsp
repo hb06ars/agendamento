@@ -493,7 +493,7 @@ function redirecionar(link){
 			          
 			
 			          <div>
-			            &nbsp&nbsp&nbsp&nbsp<button class="btn btn-default">
+			            &nbsp&nbsp&nbsp&nbsp<button id="botaoSalvar" class="btn btn-default">
 			              Salvar <i class="ion-checkmark"></i>
 			            </button>
 			            &nbsp&nbsp&nbsp&nbsp<span class="btn btn-danger" onclick="cancela()">
@@ -539,6 +539,13 @@ function valorData(data){
 	document.getElementById("dataSubmit").innerHTML=data;
 }
 
+function reset(){
+	document.getElementById("horaEscolhida").value = "--:--";
+	document.getElementById("disponibilidadeTexto").style.display = "none";
+	document.getElementById("indisponibilidadeTexto").style.display = "none";
+	document.getElementById("botaoSalvar").disabled = true;
+}
+
 function compararHora(horaEscolhida, horaInicio, horaFim)
 {
 	horaEscolhida = horaEscolhida.split(":");
@@ -560,6 +567,9 @@ function compararHora(horaEscolhida, horaInicio, horaFim)
 };
 
 function verDisponibilidade(){
+	document.getElementById("botaoSalvar").disabled = false;
+	document.getElementById("disponibilidadeTexto").style.display = "block";
+	
 	var valido = true;
 	var profissional = document.getElementById("profissionalSelecionado").value;
 	var horaEscolhida = document.getElementById("horaEscolhida").value;
@@ -573,9 +583,11 @@ function verDisponibilidade(){
 				if(valido){
 					document.getElementById("disponibilidadeTexto").style.display = "block";
 					document.getElementById("indisponibilidadeTexto").style.display = "none";
+					document.getElementById("botaoSalvar").disabled = false;
 				} else{
 					document.getElementById("disponibilidadeTexto").style.display = "none";
 					document.getElementById("indisponibilidadeTexto").style.display = "block";
+					document.getElementById("botaoSalvar").disabled = true;
 				}
 			}
 		}
@@ -586,7 +598,7 @@ function verDisponibilidade(){
 
 function atualizaDisponibilidade(){
 	// TABELA
-	document.getElementById("horaEscolhida").value="--:--";
+	reset();
 	var table = document.getElementById("tabDisponibilidade");
 	var linhas = parseInt(table.getElementsByTagName('tr').length);
 	//Limpando
