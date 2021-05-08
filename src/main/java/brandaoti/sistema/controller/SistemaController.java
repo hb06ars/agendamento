@@ -743,7 +743,53 @@ public class SistemaController {
 		
 		
 		@RequestMapping(value = "/agendamento", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView agendamento(Boolean proximo, Boolean anterior, Integer mesAtual  ) throws SQLException, ParseException {
+		public ModelAndView agendamento(Boolean salvar, Boolean proximo, Boolean anterior, Integer mesAtual,   String nomeCliente, String dataSubmit, String horaEscolhida, String servicoSelecionado, String profissionalSelecionado, String precoSubmit, String obs ) throws SQLException, ParseException {
+			//Salvando ------------------------------------------------------------
+			if(salvar!= null && salvar) {
+				System.out.println("nomeCliente: "+nomeCliente);
+				System.out.println("dataSubmit: "+dataSubmit);
+				System.out.println("horaEscolhida: "+horaEscolhida);
+				System.out.println("servicoSelecionado: "+servicoSelecionado);
+				System.out.println("profissionalSelecionado: "+profissionalSelecionado);
+				System.out.println("precoTexto: "+precoSubmit);
+				System.out.println("obs: "+obs);
+
+				Consulta c = new Consulta ();
+				c.setAtivo(true);
+				c.setCancelado(false);
+				c.setCliente(nomeCliente);
+				if(usuarioSessao.getPerfil().getCliente() && !usuarioSessao.getPerfil().getAdmin() && !usuarioSessao.getPerfil().getFuncionario()) {
+					c.setClienteSistema(usuarioSessao);
+				}
+				c.setConfirmado(false);
+				
+				String str = dataSubmit+" 00:00";
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+				LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+				c.setData(dateTime);
+				
+				str = dataSubmit+" "+horaEscolhida;
+				dateTime = LocalDateTime.parse(str, formatter);
+				c.setInicio(dateTime);
+				
+				c.setFim(dateTime);
+				
+				c.setPreco(precoDao.findById(Integer.parseInt(servicoSelecionado)).get().getPreco());
+				
+				c.setProfissional(usuarioDao.findById(Integer.parseInt(profissionalSelecionado)).get());
+				c.setServico(precoDao.findById(Integer.parseInt(servicoSelecionado)).get());
+				c.setObservacoes(obs);
+				
+				//Favor validar se este profissional possui data disponivel neste periodo antes de salvar
+				consultaDao.save(c);
+				
+				
+			}
+			//Salvando ------------------------------------------------------------
+			
+			
+			
+			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");	
 		    Calendar calendar = new GregorianCalendar();
 		    

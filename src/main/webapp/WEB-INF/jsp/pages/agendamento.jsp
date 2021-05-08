@@ -234,6 +234,9 @@ body {
 	backface-visibility: hidden;
 }
 
+::-webkit-input-placeholder {
+   color: red;
+}
 
 </style>
 
@@ -254,7 +257,7 @@ function redirecionar(link){
 			
 									    	
 <!-- start: page -->
-<form class="form-horizontal m-t-20" action="/agendamento" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+<form class="form-horizontal m-t-20" action="/agendamento" id="salvarAgendamento" enctype="multipart/form-data" method="post" accept-charset="utf-8">
 <div class="row">
 	<div class="col-lg-12">
 		<div class="row">
@@ -406,10 +409,10 @@ function redirecionar(link){
 			        <div class="row">
 						<div class="col-lg-6">
 							<c:if test="${usuario.perfil.funcionario }">
-								<input placeholder="Insira o nome do Cliente." value="">
+								<input name="nomeCliente" id="nomeCliente" placeholder="Insira o nome do Cliente! *" value="" required>
 							</c:if>
 							<c:if test="${!usuario.perfil.funcionario }">
-								<input placeholder="Insira seu nome." value="${usuario.nome }">
+								<input name="nomeCliente" id="nomeCliente" placeholder="Insira seu nome." value="${usuario.nome }">
 							</c:if>
 			          <div class="info_b">
 			            <div class="date_b">
@@ -427,7 +430,7 @@ function redirecionar(link){
 			            <div class="address">
 				             <p>
 				                Servi&ccedil;o: 
-				                <select class="form-control select2" id="servicoSelecionado" onchange="atualizaPreco()">
+				                <select class="form-control select2" id="servicoSelecionado" name="servicoSelecionado" onchange="atualizaPreco()">
 					                <option>Selecione o Servi&ccedil;o</option>
 				                    	<c:forEach items="${precos }" var="p">
 				                    		<option value="${p.id }">${p.nome } (R$${p.preco })</option>
@@ -438,7 +441,7 @@ function redirecionar(link){
 			            <div class="profissional">
 			              <p>
 			                Profissional: 
-			                <select class="form-control select2" id="profissionalSelecionado" style="background-color:#2B4450" onchange="atualizaDisponibilidade()">
+			                <select class="form-control select2" name="profissionalSelecionado" id="profissionalSelecionado" style="background-color:#2B4450" onchange="atualizaDisponibilidade()">
 				                		<option value="" <c:if test="${!usuario.perfil.funcionario }">selected</c:if> >Qualquer um.</option>
 			                    	<c:forEach items="${funcionarios }" var="f">
 			                    		<option value="${f.id }" <c:if test="${f.id == usuario.id }">selected</c:if> >${f.nome }</option>
@@ -463,37 +466,29 @@ function redirecionar(link){
 						</div>
 						<div class="col-lg-6">
 							<input value="Disponibilidade" readonly>
-							
-							
+							<i id="pessoasNaFrente" style="display:block; color:#F78181"></i>
 							<div class="p-20">
-												<table class="table m-0" id="tabDisponibilidade">
-													
-													<thead>
-														<tr>
-															<th>Inicio</th>
-															<th>Fim</th>
-															<th>Profissional</th>
-															<th>Status</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															
-														</tr>
-													</tbody>
-												</table>
-											</div>
-											<br>
-							
+								<table class="table m-0" id="tabDisponibilidade">
+									<thead>
+										<tr>
+											<th>In&iacute;cio</th>
+											<th>Fim</th>
+											<th>Profissional</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+										<tbody>
+											<tr>
+											</tr>
+										</tbody>
+								</table>
+							</div>
+							<br>
 						</div>
 			        </div>
 			        
-			        
-			        
-			          
-			
-			          <div>
-			            &nbsp&nbsp&nbsp&nbsp<button id="botaoSalvar" class="btn btn-default">
+			        <div>
+			            &nbsp&nbsp&nbsp&nbsp<button id="botaoSalvar" onclick="submitForm()" class="btn btn-default">
 			              Salvar <i class="ion-checkmark"></i>
 			            </button>
 			            &nbsp&nbsp&nbsp&nbsp<span class="btn btn-danger" onclick="cancela()">
@@ -501,19 +496,19 @@ function redirecionar(link){
 			            </span>
 			            <br>
 			            &nbsp
-			          </div>
 			        </div>
 			      </div>
-			    </div>				
+			    </div>
+			  </div>				
 			</div> <!-- end col -->
 		</div>  <!-- end row -->
 	</div>
 <!-- end col-12 -->
 </div> <!-- end row -->
 
-
+<input type="hidden" name="salvar" id="salvar" value="1" />
 <input type="hidden" id="dataSubmit" name="dataSubmit">
-
+<input type="hidden" id="precoSubmit" name="precoSubmit">
 </form>
 
 <br>
@@ -534,9 +529,23 @@ function redirecionar(link){
 
 <script>
 
+function submitForm(){
+	var servico = document.getElementById("servicoSelecionado").value;
+	var horario = document.getElementById("horaEscolhida").value;
+	var nomeCliente = document.getElementById("nomeCliente").value;
+	
+	if(!servico.includes("Selecione o Servi") && horario != "" && nomeCliente != ""){
+		document.getElementById("salvarAgendamento").submit();	
+	} else {
+		document.getElementById("mensagemModal").innerHTML = 'Preencha ao menos o nome do Cliente, Hora e Servi&ccedil;o!';
+		$("#modalMensagem").modal().show();
+	}
+}
+
+
 function valorData(data){
 	document.getElementById("dataTexto").innerHTML=data;
-	document.getElementById("dataSubmit").innerHTML=data;
+	document.getElementById("dataSubmit").value=data;
 }
 
 function reset(){
@@ -598,6 +607,7 @@ function verDisponibilidade(){
 
 function atualizaDisponibilidade(){
 	// TABELA
+	var pessoasNaFrente = 0;
 	reset();
 	var table = document.getElementById("tabDisponibilidade");
 	var linhas = parseInt(table.getElementsByTagName('tr').length);
@@ -622,7 +632,13 @@ function atualizaDisponibilidade(){
 				var cell2 = row.insertCell(2);
 				var cell3 = row.insertCell(3);
 				cell0.innerHTML = '${c.inicioHora}';
-				cell1.innerHTML = '${c.fimHora}';
+				if(${c.confirmado}){
+					cell1.innerHTML = '${c.fimHora}';	
+				} else{
+					cell1.innerHTML = '?';
+					pessoasNaFrente = pessoasNaFrente + 1;
+				}
+				
 				cell2.innerHTML = '${c.profissional.nome}';
 				if(${c.confirmado}){
 					cell3.innerHTML = 'Ocupado';	
@@ -642,6 +658,15 @@ function atualizaDisponibilidade(){
 		}	
 	</c:forEach>
 	
+	if(pessoasNaFrente == 1){
+		document.getElementById("pessoasNaFrente").innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp'+pessoasNaFrente + ' pessoa na sua frente aguardando confirmar.';	
+	}
+	if(pessoasNaFrente > 1){
+		document.getElementById("pessoasNaFrente").innerHTML = '&nbsp&nbsp&nbsp&nbsp&nbsp'+pessoasNaFrente + ' pessoas na sua frente aguardando confirmar.';	
+	}
+	if(pessoasNaFrente == 0){
+		document.getElementById("pessoasNaFrente").innerHTML = '';	
+	}
 	
 }
 
@@ -653,6 +678,7 @@ function atualizaPreco(){
 			preco = document.getElementById("precoTexto").innerHTML='${p.preco}';
 			preco = preco.replace('.',',');
 			document.getElementById("precoTexto").innerHTML='R$'+preco;
+			document.getElementById("precoSubmit").value=preco;
 		}
 	</c:forEach>
 	

@@ -9,5 +9,6 @@
 <jsp:include page="modais/modalHorario.jsp" />
 <jsp:include page="modais/modalAutor.jsp" />
 <jsp:include page="modais/modalContato.jsp" />
+<jsp:include page="modais/modalMensagem.jsp" />
 
 

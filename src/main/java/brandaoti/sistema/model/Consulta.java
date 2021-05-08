@@ -67,12 +67,36 @@ public class Consulta {
 	
 	public String getInicioHora() {
 		String horario = "";
-		horario = inicio.getHour()+":"+inicio.getMinute();
+		String min = "";
+		String hr = "";
+		if(inicio.getMinute() < 10) {
+			min = "0"+inicio.getMinute();
+		}else {
+			min = ""+inicio.getMinute();
+		}
+		if(inicio.getHour() < 10) {
+			hr = "0"+inicio.getHour();
+		} else {
+			hr = ""+inicio.getHour();
+		}
+		horario = hr+":"+min;
 		return horario;
 	}
 	public String getFimHora() {
 		String horario = "";
-		horario = fim.getHour()+":"+fim.getMinute();
+		String min = "";
+		String hr = "";
+		if(fim.getMinute() < 10) {
+			min = "0"+fim.getMinute();
+		} else {
+			min = ""+fim.getMinute();
+		}
+		if(fim.getHour() < 10) {
+			hr = "0"+fim.getHour();
+		} else {
+			hr = ""+fim.getHour();
+		}
+		horario = hr+":"+min;
 		return horario;
 	}
 	
