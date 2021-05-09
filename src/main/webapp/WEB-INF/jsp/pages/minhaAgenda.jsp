@@ -193,10 +193,15 @@ function editar(id, tipo){
 								<table class="table table-bordered table-striped mb-none" id="datatable-default" style="overflow:auto">
 									<thead>
 										<tr>
-											<th>Ordem</th>
+											<c:if test="${usuario.perfil.cliente && !usuario.perfil.admin }">
+												<th>Profissional</th>
+											</c:if>
+											<c:if test="${!usuario.perfil.cliente }">
+												<th>Ordem</th>
+											</c:if>
 											<c:if test="${usuario.perfil.admin || usuario.perfil.funcionario }">
 												<th>Confirma</th>
-												<th>Falar</th>
+												<th>Cliente</th>
 												<th>Recusa</th>
 											</c:if>
 											<th>Data</th>
@@ -215,10 +220,15 @@ function editar(id, tipo){
 										<c:set var = "ordem" value = "1"/>
 										<c:forEach items="${consultas }" var="p">
 											<tr class="gradeX">
-												<td>${ordem }º</td>
+												<c:if test="${usuario.perfil.cliente && !usuario.perfil.admin }">
+													<td> <a style="color:#BCF5A9" class="fa fa-whatsapp" href="https://wa.me/55${p.profissional.celularSomenteNumero }"></a>
+												</c:if>
+												<c:if test="${!usuario.perfil.cliente }">
+													<td>${ordem }º</td>
+												</c:if>
 												<c:if test="${usuario.perfil.admin || usuario.perfil.funcionario }">
 													<td> <i style="color:#9AFE2E" class="fa fa-check-circle" onclick="editar(${p.id }, 'confirmar') "></i>
-													<td> <a style="color:#BCF5A9" class="fa fa-whatsapp" href="https://wa.me/55${p.clienteSistema.celular }"></a>
+													<td> <a style="color:#BCF5A9" class="fa fa-whatsapp" href="https://wa.me/55${p.clienteSistema.celularSomenteNumero }"></a>
 													<td> <i style="color:#F78181" class="fa fa-trash" onclick="editar(${p.id }, 'recusar') "></i> &nbsp </i>
 												</c:if>
 												<td>${p.apenasData }</td>
@@ -231,7 +241,14 @@ function editar(id, tipo){
 												</td>
 												<td>${p.cliente }</td>
 												<td>${p.clienteSistema.nome }</td>
-												<td>${p.profissional.nome }</td>
+												<td>
+												<c:if test="${p.profissional != null }">
+													${p.profissional.nome }
+												</c:if>
+												<c:if test="${p.profissional == null }">
+													Qualquer.
+												</c:if>
+												</td>
 												<td>${p.servico.nome }</td>
 												<td>R$${p.preco }</td>
 												<td>${p.observacoes }</td>

@@ -131,6 +131,7 @@ function editar(id){
 
 
 <!-- start: page -->
+<c:if test="${usuario.perfil.admin }">
 <div class="row">
 <form action="/funcionarios" method="post" accept-charset="utf-8">
 	<div class="col-md-12">
@@ -147,7 +148,7 @@ function editar(id){
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-3 form-group">
-						<input type="text" placeholder="Matrícula" name="matricula" id="matricula" class="form-control" value="${matriculaPadrao }"required>
+						<input type="text" placeholder="Login" name="matricula" id="matricula" class="form-control" value="${matriculaPadrao }"required>
 					</div>
 					<div class="col-md-4 form-group">
 						<input type="text" placeholder="Nome" name="nome" id="nome" class="form-control" required>
@@ -209,8 +210,10 @@ function editar(id){
 					<div class="col-md-3 form-group">
 						<select id="perfil" name="perfil_codigo" class="form-control">
 							<option value="0" >-- Perfil --</option>
-							<option value="1" >Admnistrador</option>
-							<option value="3" >Funcionário</option>
+							 <c:if test="${usuario.perfil.admin }" > 
+							 	<option value="1" >Admnistrador</option>
+							 </c:if>
+							<option value="3" <c:if test="${!usuario.perfil.admin }" >selected</c:if> >Funcionário</option>
 						</select>
 					</div>
 					
@@ -232,7 +235,7 @@ function editar(id){
 	</div>
 </form>
 </div>
-
+</c:if>
 
 
 
@@ -260,36 +263,50 @@ function editar(id){
 								<table class="table table-bordered table-striped mb-none" id="datatable-default" style="overflow:auto">
 									<thead>
 										<tr>
-											<th>Editar</th>
-											<th>Matrícula</th>
+											<c:if test="${usuario.perfil.admin }">
+												<th>Editar</th>
+												<th>Matrícula</th>
+											</c:if>
 											<th>Nome</th>
 											<th>Telefone</th>
 											<th>Celular</th>
-											<th>Email</th>
-											<th>Endereço</th>
-											<th>Bairro</th>
-											<th>Cidade</th>
-											<th>Estado</th>
-											<th>CPF</th>
+											<c:if test="${!usuario.perfil.cliente || usuario.perfil.admin }">
+												<th>Email</th>
+											</c:if>
+											<c:if test="${usuario.perfil.admin }">
+												<th>Endereço</th>
+												<th>Bairro</th>
+												<th>Cidade</th>
+												<th>Estado</th>
+												<th>CPF</th>
+											</c:if>
 										</tr>
 									</thead>
 									<tbody>
 										<c:forEach items="${usuarios }" var="u">
 											<tr class="gradeX">
-												<td>
-													<i class="fa fa-trash" onclick="modalDeletar('funcionario', ${u.id}) "></i> &nbsp
-													<i class="fa fa-pencil" onclick="editar(${u.id }) "></i>
-												</td>
-												<td>${u.matricula }</td>
+												<c:if test="${usuario.perfil.admin }">
+													<td>
+														<i class="fa fa-trash" onclick="modalDeletar('funcionario', ${u.id}) "></i> &nbsp
+														<i class="fa fa-pencil" onclick="editar(${u.id }) "></i>
+													</td>
+												</c:if>
+												<c:if test="${usuario.perfil.admin }">
+													<td>${u.matricula }</td>
+												</c:if>
 												<td>${u.nome }</td>
 												<td>${u.telefone }</td>
 												<td>${u.celular }</td>
-												<td>${u.email }</td>
-												<td>${u.endereco }</td>
-												<td>${u.bairro }</td>
-												<td>${u.cidade }</td>
-												<td>${u.estado }</td>
-												<td>${u.cpf }</td>
+												<c:if test="${!usuario.perfil.cliente || usuario.perfil.admin }">
+													<td>${u.email }</td>
+												</c:if>
+												<c:if test="${usuario.perfil.admin }">
+													<td>${u.endereco }</td>
+													<td>${u.bairro }</td>
+													<td>${u.cidade }</td>
+													<td>${u.estado }</td>
+													<td>${u.cpf }</td>
+												</c:if>
 											</tr>
 										</c:forEach>
 									</tbody>

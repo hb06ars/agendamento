@@ -33,20 +33,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import brandaoti.sistema.dao.AssuntoDao;
-import brandaoti.sistema.dao.ChamadoDao;
 import brandaoti.sistema.dao.ConsultaDao;
 import brandaoti.sistema.dao.PrecoDao;
 import brandaoti.sistema.dao.PerfilDao;
-import brandaoti.sistema.dao.StatusChamadoDao;
 import brandaoti.sistema.dao.UsuarioDao;
 import brandaoti.sistema.excel.ProcessaExcel;
 import brandaoti.sistema.excel.Tabela;
 import brandaoti.sistema.model.Objeto;
 import brandaoti.sistema.model.Perfil;
-import brandaoti.sistema.model.StatusChamado;
 import brandaoti.sistema.model.Assunto;
-import brandaoti.sistema.model.Chamado;
-import brandaoti.sistema.model.Consulta;
 import brandaoti.sistema.model.Consulta;
 import brandaoti.sistema.model.Preco;
 import brandaoti.sistema.model.Usuario;
@@ -65,10 +60,6 @@ public class SistemaController {
 		private PrecoDao precoDao;
 		@Autowired
 		private AssuntoDao assuntoDao;
-		@Autowired
-		private StatusChamadoDao statusChamadoDao;
-		@Autowired
-		private ChamadoDao chamadoDao;
 		@Autowired
 		private ConsultaDao consultaDao;
 		
@@ -129,8 +120,6 @@ public class SistemaController {
 			List<Perfil> p = perfilDao.buscarTudo();
 			List<Preco> pl = precoDao.buscarTudo();
 			List<Assunto> as = assuntoDao.buscarTudo();
-			List<StatusChamado> st = statusChamadoDao.buscarTudo();
-			List<Chamado> ch = chamadoDao.buscarTudo();
 			List<Consulta> consultas = consultaDao.buscarTudo();
 			
 			usuarioSessao = null;
@@ -197,33 +186,6 @@ public class SistemaController {
 				precoDao.save(pr);
 			}
 			
-			if(st == null || st.size() == 0) {
-				StatusChamado s = new StatusChamado();
-				s.setCodigo("1");
-				s.setNome("Aberto");
-				s.setAberto(true);
-				statusChamadoDao.save(s);
-				s = new StatusChamado();
-				s.setCodigo("2");
-				s.setPendente(true);
-				s.setNome("Em Andamento");
-				statusChamadoDao.save(s);
-				s = new StatusChamado();
-				s.setCodigo("3");
-				s.setPendente(true);
-				s.setNome("Pendente Usuário");
-				statusChamadoDao.save(s);
-				s = new StatusChamado();
-				s.setCodigo("4");
-				s.setPendente(true);
-				s.setNome("Pendente Suporte");
-				statusChamadoDao.save(s);
-				s = new StatusChamado();
-				s.setCodigo("5");
-				s.setEncerrado(true);
-				s.setNome("Encerrado");
-				statusChamadoDao.save(s);
-			}
 			
 			// Excluir ----------------------------------------------------------------------------------------------------
 			if(u == null || u.size() == 0) {
@@ -519,6 +481,12 @@ public class SistemaController {
 		@RequestMapping(value = "/home", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
 		public ModelAndView home(@RequestParam(value = "usuarioVal", defaultValue = "") String usuarioVal, @RequestParam(value = "senhaVal", defaultValue = "") String senhaVal) throws SQLException {
 			String link = verificaLink("home");
+			List<Consulta> consultas = new ArrayList<Consulta>();
+			Integer confirmada = 0;
+			Integer recusada = 0;
+			Integer clientes = usuarioDao.buscarClientes().size();
+			Integer pendentes = consultaDao.buscarPendentes().size();
+
 			itemMenu = link;
 			if(usuarioSessao == null) {
 				Usuario u = usuarioDao.fazerLogin(usuarioVal, senhaVal);
@@ -526,36 +494,43 @@ public class SistemaController {
 			}
 			if((usuarioSessao != null) || logado) {
 				logado=true;
-				if(usuarioSessao.getPerfil().getAdmin()) {
-					paginaAtual = "Administrador";
-					iconePaginaAtual = "fa fa-cogs"; //Titulo do menuzinho.
-					link = verificaLink("pages/home"); //Colocar regra se for ADM ou Aluno.
-				} else {
-					paginaAtual = "Consulta";
-					iconePaginaAtual = "fa fa-cogs"; //Titulo do menuzinho.
-					link = verificaLink("pages/home"); //Colocar regra se for ADM ou Aluno.
+				paginaAtual = "Consulta";
+				iconePaginaAtual = "fa fa-cogs"; //Titulo do menuzinho.
+				link = verificaLink("pages/home"); //Colocar regra se for ADM ou Aluno.
+				consultas = consultaDao.buscarMinhaAgendaOrdenadaData(usuarioSessao.getId());
+								
+				if(usuarioSessao.getPerfil().getFuncionario()) {
+					for(Consulta c : consultas) {
+						if(c.getProfissional() == usuarioSessao) {
+							if(c.getConfirmado()) confirmada++;
+							if(c.getCancelado()) recusada++;
+							pendentes = consultaDao.buscaMeusPendentes(usuarioSessao.getId()).size();
+						}
+					}
 				}
+				if(usuarioSessao.getPerfil().getCliente()) {
+					for(Consulta c : consultas) {
+						if(c.getConfirmado()) confirmada++;
+						if(c.getCancelado()) recusada++;
+					}
+				}
+				
 			} else {
 				logado=false;
 				link = verificaLink("pages/deslogar"); 
 			}
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
+			modelAndView.addObject("confirmada", confirmada);
+			modelAndView.addObject("recusada", recusada);
+			modelAndView.addObject("pendentes", pendentes);
+			modelAndView.addObject("clientes", clientes);
+			modelAndView.addObject("consultas", consultas);
 			modelAndView.addObject("usuario", usuarioSessao);
 			modelAndView.addObject("paginaAtual", paginaAtual); 
 			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
 			if(logado) {
 				if(usuarioSessao.getPerfil().getAdmin()) {
-					List<Chamado> todosChamados = chamadoDao.buscarTudo();
-					List<Chamado> todosAbertos = chamadoDao.buscarAbertos();
-					List<Chamado> todosVencidos= chamadoDao.buscarVencidos();
-					List<Chamado> todosAndamentos = chamadoDao.buscarAndamentos();
-					List<Chamado> todosEncerrados = chamadoDao.buscarEncerrados();
 					
-					modelAndView.addObject("todosChamados", todosChamados.size());
-					modelAndView.addObject("todosAbertos", todosAbertos.size());
-					modelAndView.addObject("todosVencidos", todosVencidos.size());
-					modelAndView.addObject("todosAndamentos", todosAndamentos.size());
-					modelAndView.addObject("todosEncerrados", todosEncerrados.size());
 					
 				}
 				
@@ -616,7 +591,8 @@ public class SistemaController {
 					usuarioDao.save(a);
 					
 				} else if(cliente.getMatricula() != null && (acao.equals("salvar")) && repetido) {
-					modelAndView.addObject("erro", "Já existe este CPF / Matrícula.");
+					modelAndView.addObject("mensagem", "Já existe este CPF / Matrícula.");
+					modelAndView.addObject("tipoMensagem", "erro");
 				}
 				modelAndView.addObject("atualizarPagina", atualizarPagina);
 				List<Usuario> usuarios = usuarioDao.buscarClientes();
@@ -651,7 +627,11 @@ public class SistemaController {
 						Usuario a = new Usuario();
 						a = funcionario;
 						a.setSenha(funcionario.getCpf().replace(".", "").replace("-", ""));
-						a.setPerfil(perfilDao.buscarCodigo(perfil_codigo));
+						if(usuarioSessao.getPerfil().getAdmin()) {
+							a.setPerfil(perfilDao.buscarCodigo(perfil_codigo));
+						} else {
+							a.setPerfil(perfilDao.buscarFuncionario().get(0));
+						}
 						usuarioDao.save(a);
 						modelAndView.addObject("atualizarPagina", atualizarPagina);
 					} catch(Exception e) {
@@ -674,7 +654,8 @@ public class SistemaController {
 					a.setPerfil(perfilDao.buscarCodigo(perfil_codigo));
 					usuarioDao.save(a);
 				} else if(funcionario.getMatricula() != null && (acao.equals("salvar")) && repetido) {
-					modelAndView.addObject("erro", "Já existe este CPF / Matrícula.");
+					modelAndView.addObject("mensagem", "Já existe este CPF / Matrícula.");
+					modelAndView.addObject("tipoMensagem", "erro");    
 				}
 				List<Usuario> usuarios = usuarioDao.buscarFuncionarios();
 				modelAndView.addObject("usuarios", usuarios);
@@ -793,7 +774,9 @@ public class SistemaController {
 				c.setInicio(dateTime);
 				c.setFim(dateTime);
 				c.setPreco(precoDao.findById(Integer.parseInt(servicoSelecionado)).get().getPreco());
-				c.setProfissional(usuarioDao.findById(Integer.parseInt(profissionalSelecionado)).get());
+				if(!profissionalSelecionado.equals("")) {
+					c.setProfissional(usuarioDao.findById(Integer.parseInt(profissionalSelecionado)).get());
+				}
 				c.setServico(precoDao.findById(Integer.parseInt(servicoSelecionado)).get());
 				c.setObservacoes(obs);
 				
@@ -1125,14 +1108,17 @@ public class SistemaController {
 				}
 				c.setObservacoes(observacao_str);
 				if(tabelaSolicitada.equals("confirmar") && valido) {
+					c.setProfissional(usuarioSessao);
 					c.setConfirmado(true);
 					c.setCancelado(false);
 					consultaDao.save(c);
 				} 
 				if(tabelaSolicitada.equals("recusar")) {
-					c.setConfirmado(false);
-					c.setCancelado(true);
-					consultaDao.save(c);
+					if(c.getProfissional() != null) {
+						c.setConfirmado(false);
+						c.setCancelado(true);
+						consultaDao.save(c);
+					}
 				}
 				atualizarPagina = "/minhaAgenda";
 				List<Consulta> consultas = consultaDao.buscarTudo();

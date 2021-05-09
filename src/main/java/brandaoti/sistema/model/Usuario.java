@@ -148,6 +148,12 @@ public class Usuario {
 	public String getCelular() {
 		return celular;
 	}
+	
+	public String getCelularSomenteNumero() {
+		String cel = celular;
+		cel = cel.replace("(", "").replace(")", "").replace("-", "").replace(" ", "");
+		return cel;
+	}
 
 	public void setCelular(String celular) {
 		this.celular = celular;

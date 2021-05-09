@@ -155,7 +155,7 @@ function editar(id){
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-3 form-group">
-						<input type="number" placeholder="Matrícula" name="matricula" id="matricula" class="form-control" value="${matriculaPadrao }"required>
+						<input type="text" placeholder="Login" name="matricula" id="matricula" class="form-control" value="${matriculaPadrao }"required>
 					</div>
 					<div class="col-md-4 form-group">
 						<input type="text" placeholder="Nome" name="nome" id="nome" class="form-control" required>
@@ -241,7 +241,7 @@ function editar(id){
 
 
 
-
+<c:if test="${!usuario.perfil.cliente || usuario.perfil.admin}">
 <section class="panel">
 							<header class="panel-heading">
 								<div class="panel-actions">
@@ -256,19 +256,22 @@ function editar(id){
 									<thead>
 										<tr>
 											<c:if test="${usuario.perfil.admin == true}">
-											<th>Editar</th>
-											<th>Matrícula</th>
+												<th>Editar</th>
+												<th>Matrícula</th>
+											</c:if>
 											<th>Nome</th>
 											<th>Telefone</th>
 											<th>Celular</th>
 											<th>Email</th>
-											<th>Endereço</th>
-											<th>Bairro</th>
-											<th>Cidade</th>
-											<th>Estado</th>
-											<th>CPF</th>
-											<th>Data de Nascimento</th>
+											<c:if test="${usuario.perfil.admin == true}">
+												<th>Endereço</th>
+												<th>Bairro</th>
+												<th>Cidade</th>
+												<th>Estado</th>
+												<th>CPF</th>
+												<th>Data de Nascimento</th>
 											</c:if>
+											
 										</tr>
 									</thead>
 									<tbody>
@@ -279,19 +282,18 @@ function editar(id){
 														<i class="fa fa-trash" onclick="modalDeletar('usuario', ${u.id}) "></i> &nbsp
 														<i class="fa fa-pencil" onclick="editar(${u.id }) "></i>
 													</td>
+													<td>${u.matricula }</td>
 												</c:if>
-												<td>${u.matricula }</td>
 												<td>${u.nome }</td>
 												<td>${u.telefone }</td>
 												<td>${u.celular }</td>
 												<td>${u.email }</td>
-												<td>${u.endereco }</td>
-												<td>${u.bairro }</td>
-												<td>${u.cidade }</td>
-												<td>${u.estado }</td>
-												<td>${u.cpf }</td>
-												
-												<c:if test="${usuario.perfil.funcionario == true || usuario.perfil.professor == true}">
+												<c:if test="${usuario.perfil.admin == true}">
+													<td>${u.endereco }</td>
+													<td>${u.bairro }</td>
+													<td>${u.cidade }</td>
+													<td>${u.estado }</td>
+													<td>${u.cpf }</td>
 													<td>
 													<c:set var="nascimento" value="${fn:substring(u.dataNascimento, 8, 10)}/${fn:substring(u.dataNascimento, 5, 7)}/${fn:substring(u.dataNascimento, 0, 4)}" />
 													${nascimento }
@@ -307,7 +309,7 @@ function editar(id){
 								<button type="button" class="btn btn-primary" onclick="tableToExcel('datatable-default', 'Documento')">Download</button>
 							</div>
 						</section>
-
+</c:if>
 
 
 

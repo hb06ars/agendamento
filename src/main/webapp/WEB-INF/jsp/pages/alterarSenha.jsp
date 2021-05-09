@@ -55,7 +55,7 @@ function acao(){
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-3 form-group">
-						<input type="text" placeholder="Matrícula" name="matricula" id="matricula" class="form-control" required>
+						<input type="text" placeholder="Matrícula" name="matricula" id="matricula" class="form-control" value="${usuario.matricula }" readonly>
 					</div>
 					<div class="col-md-3 form-group">
 						<input type="password" placeholder="Senha Atual" name="senha" id="senha" class="form-control" required>
@@ -70,10 +70,10 @@ function acao(){
 						<a class="btn btn-primary" onclick="acao()" >Alterar</a>
 					</div>
 					<div class="col-md-12 form-group">
-						<i style="color:red" id="textoValida">${msg }</i>
+						<i style="color:#F5A9A9" id="textoValida">${msg }</i>
 					</div>
 					<div class="col-md-12 form-group">
-						<i style="color:green" id="textoValida">${msgOk }</i>
+						<i style="color:#BCF5A9" id="textoValida">${msgOk }</i>
 					</div>
 					<input type="hidden" id="acao" name="acao" value="0">
 				</div>
