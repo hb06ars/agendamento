@@ -23,6 +23,8 @@ function iniciando(){
 			mensagem('${tituloMensagem}','${mensagem}');	
 		} else if('${tipoMensagem}' == 'erro'){
 			mensagemErro('${tituloMensagem}','${mensagem}');
+		} else{
+			mensagem('Atenção','${mensagem}');
 		}
 	}
 

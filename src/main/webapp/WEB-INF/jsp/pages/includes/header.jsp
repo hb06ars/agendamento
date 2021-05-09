@@ -53,7 +53,8 @@
 	<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 	<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 	<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
-	    
+	
+	<jsp:include page="mensagens.jsp" />    
     <jsp:include page="javaScript.jsp" />
     
     <body class="fixed-left" onload="iniciando()" >
@@ -102,11 +103,14 @@
                         <ul>
 							<li class="has_sub">
                                 <a href="javascript:void(0);" class="waves-effect"><i class="ti-search">
-                                	</i><span>Consultar </span> <span class="menu-arrow"></span>
+                                	</i><span>Agenda </span> <span class="menu-arrow"></span>
                                 </a>
                                 <ul>
                                     <li>
-                                        <a href="/agendamento"><span>Agendamentos</span></a>
+                                        <a href="/agendamento"><span>Marcar Serviço</span></a>
+                                    </li>
+                                    <li>
+                                        <a href="/minhaAgenda"><span>Minha Agenda</span></a>
                                     </li>
                                 </ul>
                             </li>

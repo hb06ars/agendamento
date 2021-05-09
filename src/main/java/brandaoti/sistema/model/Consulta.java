@@ -55,6 +55,28 @@ public class Consulta {
 	public void setCliente(String cliente) {
 		this.cliente = cliente;
 	}
+	
+	public String getApenasData() {
+		String strData="";
+		String dia = "";
+		String mes = "";
+		String ano = "";
+		if( data.getDayOfMonth() < 10 ) {
+			dia = "0"+data.getDayOfMonth();
+		} else {
+			dia = ""+data.getDayOfMonth();
+		}
+		Integer m = data.getMonthValue();
+		if( m < 10 ) {
+			mes = "0"+m;
+		} else {
+			mes = ""+m;
+		}
+		ano = ""+data.getYear();
+		strData = dia+"/"+mes+"/"+ano;
+		return strData;
+	}
+	
 	public LocalDateTime getData() {
 		return data;
 	}

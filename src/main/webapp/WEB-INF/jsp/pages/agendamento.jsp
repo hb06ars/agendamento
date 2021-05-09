@@ -588,7 +588,9 @@ function verDisponibilidade(){
 			var dataFormatada = '${c.data}';
 			dataFormatada = dataFormatada.substring(8, 10) + '/' + dataFormatada.substring(5, 7) + '/' + dataFormatada.substring(0, 4);
 			if(dataFormatada == data){
-				valido = compararHora(horaEscolhida, '${c.inicioHora}', '${c.fimHora}');
+				if(valido){
+					valido = compararHora(horaEscolhida, '${c.inicioHora}', '${c.fimHora}');	
+				}
 				if(valido){
 					document.getElementById("disponibilidadeTexto").style.display = "block";
 					document.getElementById("indisponibilidadeTexto").style.display = "none";

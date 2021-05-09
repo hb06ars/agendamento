@@ -1,12 +1,11 @@
-
 <div id="alerta" style="display: none; position: fixed; top: 0; left: 20%; right: 20%; width: 60%; padding-top: 10px; z-index: 9999">
-<div class="alert alert-info alert-dismissable" style="margin: 0 auto; box-shadow: 1px 1px 5px black;">
+<div class="alert alert-info alert-dismissable" style="color:black; margin: 0 auto; box-shadow: 1px 1px 5px black;">
 	<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
 	<strong><i id="tituloMsg">Teste</i> </strong> <div id="corpoMsg">Teste</div>
 </div>
 </div>
 <div id="alertaErro" style="display: none; position: fixed; top: 0; left: 20%; right: 20%; width: 60%; padding-top: 10px; z-index: 9999">
-<div class="alert alert-danger alert-dismissable" style="margin: 0 auto; box-shadow: 1px 1px 5px black;">
+<div class="alert alert-danger alert-dismissable" style="color:white; margin: 0 auto; box-shadow: 1px 1px 5px black;">
 	<a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
 	<strong><i id="tituloMsgErro">Teste</i> </strong> <div id="corpoMsgErro">Teste</div>
 </div>

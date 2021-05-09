@@ -372,6 +372,15 @@ public class SistemaController {
 					modelAndView.addObject("precos", pl);
 					atualizarPagina = "/precos";
 				}
+				if(tabela.equals("consultas")) {
+					link = verificaLink("pages/minhaAgenda");
+					modelAndView = new ModelAndView(link);
+					paginaAtual = "Minha Agenda";
+					consultaDao.delete(consultaDao.findById(id).get());
+					List<Consulta> pl = consultaDao.buscarTudo();
+					modelAndView.addObject("consultas", pl);
+					atualizarPagina = "/minhaAgenda";
+				}
 			}
 			modelAndView.addObject("atualizarPagina", atualizarPagina);
 			modelAndView.addObject("usuario", usuarioSessao);
@@ -745,6 +754,17 @@ public class SistemaController {
 		@RequestMapping(value = "/agendamento", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
 		public ModelAndView agendamento(Boolean salvar, Boolean proximo, Boolean anterior, Integer mesAtual,   String nomeCliente, String dataSubmit, String horaEscolhida, String servicoSelecionado, String profissionalSelecionado, String precoSubmit, String obs ) throws SQLException, ParseException {
 			//Salvando ------------------------------------------------------------
+			String msg = "";
+			Boolean erro = false;
+			try {
+				Integer i = Integer.parseInt(servicoSelecionado);
+			}catch(Exception e) {
+				if(profissionalSelecionado != null) {
+					salvar = null;
+					msg = "Serviço não selecionado.";
+					erro = true;
+				}
+			}
 			if(salvar!= null && salvar) {
 				System.out.println("nomeCliente: "+nomeCliente);
 				System.out.println("dataSubmit: "+dataSubmit);
@@ -771,17 +791,26 @@ public class SistemaController {
 				str = dataSubmit+" "+horaEscolhida;
 				dateTime = LocalDateTime.parse(str, formatter);
 				c.setInicio(dateTime);
-				
 				c.setFim(dateTime);
-				
 				c.setPreco(precoDao.findById(Integer.parseInt(servicoSelecionado)).get().getPreco());
-				
 				c.setProfissional(usuarioDao.findById(Integer.parseInt(profissionalSelecionado)).get());
 				c.setServico(precoDao.findById(Integer.parseInt(servicoSelecionado)).get());
 				c.setObservacoes(obs);
 				
 				//Favor validar se este profissional possui data disponivel neste periodo antes de salvar
-				consultaDao.save(c);
+				String s = dataSubmit.substring(6, 10) + "-" + dataSubmit.substring(3, 5) + "-" + dataSubmit.substring(0, 2);
+				List<Consulta> consultas = consultaDao.buscarInvalidos(s,horaEscolhida);
+				
+				
+				if(consultas.size() == 0) {
+					consultaDao.save(c);
+					msg = "Solicitado a reserva.";
+					erro = false;
+				} else {
+					msg = "Data e Horário inválidos.";
+					erro = true;
+				}
+				
 				
 				
 			}
@@ -1003,7 +1032,107 @@ public class SistemaController {
 			  modelAndView.addObject("precos", precos);
 			  List<Consulta> consultas = consultaDao.buscarTudo();
 			  modelAndView.addObject("consultas", consultas);
-			    
+			  modelAndView.addObject("mensagem", msg);
+			  if(erro) {
+				  modelAndView.addObject("tipoMensagem", "erro");  
+			  } else {
+				  modelAndView.addObject("tipoMensagem", "info");
+			  }
+			  
+			}
+			return modelAndView; //retorna a variavel
+		}
+		
+		
+		@RequestMapping(value = "/minhaAgenda", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
+		public ModelAndView minhaAgenda(String acao) throws SQLException {
+			paginaAtual = "Minha Agenda";
+			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = verificaLink("pages/minhaAgenda");
+			itemMenu = link;
+			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
+			modelAndView.addObject("usuario", usuarioSessao);
+			modelAndView.addObject("paginaAtual", paginaAtual); 
+			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
+			if(logado) {
+				//... Salvando dados.
+				if(acao != null) {
+					Preco p = new Preco();
+					if(acao.equals("atualizar")) {
+						System.out.println("Atualizando");
+					}
+				}
+				atualizarPagina = "/minhaAgenda";
+				List<Consulta> consultas = consultaDao.buscarMinhaAgenda(usuarioSessao.getId());
+				modelAndView.addObject("consultas", consultas);
+				modelAndView.addObject("paginaAtual", paginaAtual);
+			}
+			return modelAndView; //retorna a variavel
+		}
+		
+		
+		
+		
+		@RequestMapping(value = "/confirmar", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET, RequestMethod.POST}) // Pagina de Vendas
+		public ModelAndView confirmar(String tabelaSolicitada,Integer idAltera, String dataStr, String inicioHoraStr, String fimHoraStr, String clienteStr, String servicoStr, String precoStr) throws SQLException {
+			System.out.println("Tabela: "+tabelaSolicitada);
+			System.out.println("idAltera: "+idAltera);
+			paginaAtual = "Minha Agenda";
+			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = verificaLink("pages/minhaAgenda");
+			itemMenu = link;
+			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
+			modelAndView.addObject("usuario", usuarioSessao);
+			modelAndView.addObject("paginaAtual", paginaAtual); 
+			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
+			if(logado) {
+				if(tabelaSolicitada.equals("consultas")) {
+					link = verificaLink("pages/minhaAgenda");
+					modelAndView = new ModelAndView(link);
+					paginaAtual = "Minha Agenda";
+					Consulta c = consultaDao.findById(idAltera).get();
+					c.setConfirmado(true);
+					c.setCancelado(false);
+					consultaDao.save(c);
+					atualizarPagina = "/minhaAgenda";
+				}
+				atualizarPagina = "/minhaAgenda";
+				List<Consulta> consultas = consultaDao.buscarTudo();
+				modelAndView.addObject("consultas", consultas);
+				modelAndView.addObject("paginaAtual", paginaAtual);
+				modelAndView.addObject("atualizarPagina", atualizarPagina);
+			}
+			return modelAndView; //retorna a variavel
+		}
+		
+		
+		@RequestMapping(value = "/recusar", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET, RequestMethod.POST}) // Pagina de Vendas
+		public ModelAndView recusar(String tabelaSolicitada,Integer idAltera, String dataStr, String inicioHoraStr, String fimHoraStr, String clienteStr, String servicoStr, String precoStr) throws SQLException {
+			paginaAtual = "Minha Agenda";
+			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = verificaLink("pages/minhaAgenda");
+			itemMenu = link;
+			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
+			modelAndView.addObject("usuario", usuarioSessao);
+			modelAndView.addObject("paginaAtual", paginaAtual); 
+			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
+			if(logado) {
+				if(tabelaSolicitada.equals("consultas")) {
+					link = verificaLink("pages/minhaAgenda");
+					modelAndView = new ModelAndView(link);
+					paginaAtual = "Minha Agenda";
+					Consulta c = consultaDao.findById(idAltera).get();
+					System.out.println("aaaaa");
+					c.setConfirmado(false);
+					c.setCancelado(true);
+					consultaDao.save(c);
+					atualizarPagina = "/minhaAgenda";
+				}
+				atualizarPagina = "/minhaAgenda";
+				List<Consulta> consultas = consultaDao.buscarTudo();
+				modelAndView.addObject("consultas", consultas);
+				modelAndView.addObject("paginaAtual", paginaAtual);
+				modelAndView.addObject("atualizarPagina", atualizarPagina);
 			}
 			return modelAndView; //retorna a variavel
 		}
