@@ -16,6 +16,30 @@
 
 
 <script>
+function modalConfirmar(campo ){
+	document.getElementById("tabelaSolicitada").value = campo;
+	var valid = true;
+	if(document.getElementById("data").value == ''){
+		valid = false;
+	}
+	if(document.getElementById("inicio").value == ''){
+		valid = false;
+	}
+	if(document.getElementById("fim").value == ''){
+		valid = false;
+	}
+	if(document.getElementById("preco").value == ''){
+		valid = false;
+	}
+	if (!valid){
+		modalMensagem('Por favor preencha todos os campos.');
+	} else { 
+		document.getElementById("formConfirmar").submit();
+	}
+	
+}
+
+
 
 function acao(valor){
 	document.getElementById("acao").value = valor;
@@ -62,7 +86,7 @@ function editar(id, tipo){
 			document.getElementById("fim").value = '${p.fimHora}';
 			document.getElementById("cliente").value = '${p.cliente} (${p.clienteSistema.nome})';
 			document.getElementById("servico").value = '${p.servico.nome}';
-			document.getElementById("preco").value = 'R$${p.preco}';
+			document.getElementById("preco").value = '${p.preco}';
 			document.getElementById("observacao").value = '${p.observacoes}';
 		}
 	</c:forEach>
@@ -76,8 +100,8 @@ function editar(id, tipo){
 
 <!-- start: page -->
 <c:if test="${usuario.perfil.admin || usuario.perfil.funcionario }">
+<form action="/finalizarConsulta" method="post" id="formConfirmar" accept-charset="utf-8">
 <div class="row">
-<form action="/precos" method="post" accept-charset="utf-8">
 	<div class="col-md-12">
 		<div data-collapsed="0" class="panel">
 			<div class="panel-heading">
@@ -93,40 +117,40 @@ function editar(id, tipo){
 				<div class="row">
 					<div class="col-md-4 form-group">
 						<label>Data:</label>
-						<input type="date" placeholder="Nome" name="data" id="data" class="form-control" readonly>
+						<input type="date" placeholder="Data" name="data_str" id="data" class="form-control" required>
 					</div>
 					<div class="col-md-4 form-group">
 						<label>Inicio:</label>
-						<input type="time" placeholder="Nome" name="inicio" id="inicio" class="form-control" readonly>
+						<input type="time" placeholder="Inicio" name="inicioHora_str" id="inicio" class="form-control" required>
 					</div>
 					<div class="col-md-4 form-group">
 						<label>Fim:</label>
-						<input type="time" placeholder="Nome" name="fim" id="fim" class="form-control" readonly>
+						<input type="time" placeholder="Fim" name="fimHora_str" id="fim" class="form-control" required>
 					</div>
 					<div class="col-md-4 form-group">
 						<label>Cliente:</label>
-						<input type="text" placeholder="Nome" name="cliente" id="cliente" class="form-control" readonly>
+						<input type="text" placeholder="Cliente" name="cliente_str" id="cliente" class="form-control" readonly>
 					</div>
 					<div class="col-md-4 form-group">
 						<label>Servico:</label>
-						<input type="text" placeholder="Nome" name="servico" id="servico" class="form-control" readonly>
+						<input type="text" placeholder="Serviço" name="servico_str" id="servico" class="form-control" readonly>
 					</div>
 					<div class="col-md-4 form-group">
 						<label>Preco:</label>
-						<input type="text" placeholder="Nome" name="preco" id="preco" class="form-control" readonly>
+						<input type="number" placeholder="Preço" name="preco_str" id="preco" min="0" step="0.010" class="form-control" required>
 					</div>
 					<div class="col-md-12 form-group">
 						<label>Observacao:</label>
-						<input type="text" placeholder="Nome" name="observacao" id="observacao" class="form-control" readonly>
+						<input type="text" placeholder="Observacao" name="observacao_str" id="observacao" class="form-control" >
 					</div>
 					<div class="col-md-2 form-group" id="salvar">
 						
 					</div>
 					<div class="col-md-2 form-group" id="atualizar" style="display:none">
-						<input type="button" class="btn btn-primary" onclick="modalConfirmar('consultas')" value="Confirmar">
+						<input type="button" class="btn btn-primary" onclick="modalConfirmar('confirmar')" value="Confirmar">
 					</div>
 					<div class="col-md-2 form-group" id="recusar" style="display:none">
-						<input type="button" class="btn btn-danger" onclick="modalRecusar('consultas')" value="Recusar">
+						<input type="button" class="btn btn-danger" onclick="modalConfirmar('recusar')" value="Recusar">
 					</div>
 					<div class="col-md-2 form-group" id="cancelar" style="display:none">
 						<input type="button" class="btn btn-default" onclick="cancelar()" value="Voltar">
@@ -134,12 +158,13 @@ function editar(id, tipo){
 					
 					<input type="hidden" id="idValor" name="idValor" value="">
 					<input type="hidden" id="acao" name="acao" value="salvar">
+					<input type="hidden" name="tabelaSolicitada" id="tabelaSolicitada">
 				</div>
 			</div>
 		</div>
 	</div>
-</form>
 </div>
+</form>
 </c:if>
 
 
@@ -168,17 +193,18 @@ function editar(id, tipo){
 								<table class="table table-bordered table-striped mb-none" id="datatable-default" style="overflow:auto">
 									<thead>
 										<tr>
+											<th>Ordem</th>
 											<c:if test="${usuario.perfil.admin || usuario.perfil.funcionario }">
-												<th>Confirmar</th>
+												<th>Confirma</th>
 												<th>Falar</th>
-												<th>Cancelar</th>
+												<th>Recusa</th>
 											</c:if>
 											<th>Data</th>
 											<th>Inicio</th>
 											<th>Fim</th>
 											<th>Confirmado</th>
 											<th>Cliente</th>
-											<th>Cliente Sistema</th>
+											<th>Cadastro</th>
 											<th>Profissional</th>
 											<th>Servico</th>
 											<th>Preco</th>
@@ -186,8 +212,10 @@ function editar(id, tipo){
 										</tr>
 									</thead>
 									<tbody>
+										<c:set var = "ordem" value = "1"/>
 										<c:forEach items="${consultas }" var="p">
 											<tr class="gradeX">
+												<td>${ordem }º</td>
 												<c:if test="${usuario.perfil.admin || usuario.perfil.funcionario }">
 													<td> <i style="color:#9AFE2E" class="fa fa-check-circle" onclick="editar(${p.id }, 'confirmar') "></i>
 													<td> <a style="color:#BCF5A9" class="fa fa-whatsapp" href="https://wa.me/55${p.clienteSistema.celular }"></a>
@@ -208,6 +236,7 @@ function editar(id, tipo){
 												<td>R$${p.preco }</td>
 												<td>${p.observacoes }</td>
 											</tr>
+											<c:set var = "ordem" value = "${ordem + 1 }"/>
 										</c:forEach>
 									</tbody>
 								</table>

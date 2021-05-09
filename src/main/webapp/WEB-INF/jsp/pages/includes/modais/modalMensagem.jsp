@@ -7,7 +7,8 @@
 
 <!--  AUTOR -->
 <script>
-function modalAutor(){
+function modalMensagem(msg){
+	document.getElementById("mensagemModal").innerHTML = msg;
 	$("#modalMensagem").modal().show();
 }
 </script>

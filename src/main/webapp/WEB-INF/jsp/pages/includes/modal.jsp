@@ -10,6 +10,5 @@
 <jsp:include page="modais/modalAutor.jsp" />
 <jsp:include page="modais/modalContato.jsp" />
 <jsp:include page="modais/modalMensagem.jsp" />
-<jsp:include page="modais/modalConfirmar.jsp" />
 
 

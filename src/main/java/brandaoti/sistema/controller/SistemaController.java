@@ -799,7 +799,7 @@ public class SistemaController {
 				
 				//Favor validar se este profissional possui data disponivel neste periodo antes de salvar
 				String s = dataSubmit.substring(6, 10) + "-" + dataSubmit.substring(3, 5) + "-" + dataSubmit.substring(0, 2);
-				List<Consulta> consultas = consultaDao.buscarInvalidos(s,horaEscolhida);
+				List<Consulta> consultas = consultaDao.buscarInvalidos(usuarioSessao.getId(),s,horaEscolhida);
 				
 				
 				if(consultas.size() == 0) {
@@ -1073,10 +1073,10 @@ public class SistemaController {
 		
 		
 		
-		@RequestMapping(value = "/confirmar", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET, RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView confirmar(String tabelaSolicitada,Integer idAltera, String dataStr, String inicioHoraStr, String fimHoraStr, String clienteStr, String servicoStr, String precoStr) throws SQLException {
+		@RequestMapping(value = "/finalizarConsulta", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET, RequestMethod.POST}) // Pagina de Vendas
+		public ModelAndView finalizarConsulta(String tabelaSolicitada,Integer idValor, String data_str, String inicioHora_str, String fimHora_str, String cliente_str, String servico_str, String preco_str, String observacao_str) throws SQLException {
 			System.out.println("Tabela: "+tabelaSolicitada);
-			System.out.println("idAltera: "+idAltera);
+			System.out.println("idAltera: "+idValor);
 			paginaAtual = "Minha Agenda";
 			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
 			String link = verificaLink("pages/minhaAgenda");
@@ -1086,47 +1086,53 @@ public class SistemaController {
 			modelAndView.addObject("paginaAtual", paginaAtual); 
 			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
 			if(logado) {
-				if(tabelaSolicitada.equals("consultas")) {
-					link = verificaLink("pages/minhaAgenda");
-					modelAndView = new ModelAndView(link);
-					paginaAtual = "Minha Agenda";
-					Consulta c = consultaDao.findById(idAltera).get();
+				link = verificaLink("pages/minhaAgenda");
+				modelAndView = new ModelAndView(link);
+				paginaAtual = "Minha Agenda";
+				Consulta c = consultaDao.findById(idValor).get();
+				Boolean valido = false;
+				System.out.println("data_str: " + data_str );
+				System.out.println("inicioHora_str: " + inicioHora_str );
+				System.out.println("fimHora_str: " + fimHora_str );
+				
+				List<Consulta> validacao = consultaDao.buscarInvalidosDuasDatas(idValor ,usuarioSessao.getId(), data_str, inicioHora_str, fimHora_str);
+				
+				if( validacao.size() == 0 ) {
+					valido = true;
+					
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); 
+					LocalDateTime dateTime = LocalDateTime.parse(data_str+" "+inicioHora_str, formatter);
+					c.setInicio(dateTime);
+					dateTime = LocalDateTime.parse(data_str+" "+fimHora_str, formatter);
+					c.setFim(dateTime);
+					formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); 
+					dateTime = LocalDateTime.parse(data_str+" 00:00", formatter);
+					c.setData(dateTime);
+				}
+				
+				System.out.println("valido: "+valido);
+				System.out.println("validacao1.size(): "+validacao.size());
+				
+				
+				preco_str = preco_str.replace("R$", "").replace(",", ".");
+				Double va = Double.parseDouble(preco_str);
+				if(va >= 0) {
+					c.setPreco(va);
+				} else {
+					String msg = "O Valor deve ser maior ou igual a zero.";
+					 modelAndView.addObject("mensagem", msg);
+					 modelAndView.addObject("tipoMensagem", "erro");  
+				}
+				c.setObservacoes(observacao_str);
+				if(tabelaSolicitada.equals("confirmar") && valido) {
 					c.setConfirmado(true);
 					c.setCancelado(false);
 					consultaDao.save(c);
-					atualizarPagina = "/minhaAgenda";
-				}
-				atualizarPagina = "/minhaAgenda";
-				List<Consulta> consultas = consultaDao.buscarTudo();
-				modelAndView.addObject("consultas", consultas);
-				modelAndView.addObject("paginaAtual", paginaAtual);
-				modelAndView.addObject("atualizarPagina", atualizarPagina);
-			}
-			return modelAndView; //retorna a variavel
-		}
-		
-		
-		@RequestMapping(value = "/recusar", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET, RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView recusar(String tabelaSolicitada,Integer idAltera, String dataStr, String inicioHoraStr, String fimHoraStr, String clienteStr, String servicoStr, String precoStr) throws SQLException {
-			paginaAtual = "Minha Agenda";
-			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = verificaLink("pages/minhaAgenda");
-			itemMenu = link;
-			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
-			modelAndView.addObject("usuario", usuarioSessao);
-			modelAndView.addObject("paginaAtual", paginaAtual); 
-			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
-			if(logado) {
-				if(tabelaSolicitada.equals("consultas")) {
-					link = verificaLink("pages/minhaAgenda");
-					modelAndView = new ModelAndView(link);
-					paginaAtual = "Minha Agenda";
-					Consulta c = consultaDao.findById(idAltera).get();
-					System.out.println("aaaaa");
+				} 
+				if(tabelaSolicitada.equals("recusar")) {
 					c.setConfirmado(false);
 					c.setCancelado(true);
 					consultaDao.save(c);
-					atualizarPagina = "/minhaAgenda";
 				}
 				atualizarPagina = "/minhaAgenda";
 				List<Consulta> consultas = consultaDao.buscarTudo();
@@ -1136,6 +1142,8 @@ public class SistemaController {
 			}
 			return modelAndView; //retorna a variavel
 		}
+		
+		
 		
 }
 	
