@@ -44,7 +44,7 @@ function redirecionar(link){
                             <div class="col-md-6 col-lg-3">
                                 <div class="widget-bg-color-icon card-box fadeInDown animated">
                                     <div class="bg-icon bg-icon-primary pull-left">
-                                        <i class="md md-attach-money text-primary"></i>
+                                        <i class="md md-thumb-up text-primary"></i>
                                     </div>
                                     <div class="text-right">
                                         <h3 class="text-dark"><b class="counter">${confirmada }</b></h3>
@@ -57,7 +57,7 @@ function redirecionar(link){
                             <div class="col-md-6 col-lg-3">
                                 <div class="widget-bg-color-icon card-box">
                                     <div class="bg-icon bg-icon-pink pull-left">
-                                        <i class="md md-add-shopping-cart text-pink"></i>
+                                        <i class="md  md-thumb-down text-pink"></i>
                                     </div>
                                     <div class="text-right">
                                         <h3 class="text-dark"><b class="counter">${recusada }</b></h3>
@@ -69,8 +69,8 @@ function redirecionar(link){
 
                             <div class="col-md-6 col-lg-3">
                                 <div class="widget-bg-color-icon card-box">
-                                    <div class="bg-icon bg-icon-info pull-left">
-                                        <i class="md md-equalizer text-info"></i>
+                                    <div class="bg-icon bg-icon-warning pull-left">
+                                        <i class="md md-warning text-warning"></i>
                                     </div>
                                     <div class="text-right">
                                         <h3 class="text-dark"><b class="counter">${pendentes }</b></h3>
@@ -83,7 +83,7 @@ function redirecionar(link){
                             <div class="col-md-6 col-lg-3">
                                 <div class="widget-bg-color-icon card-box">
                                     <div class="bg-icon bg-icon-success pull-left">
-                                        <i class="md md-remove-red-eye text-success"></i>
+                                        <i class="md md-people text-success"></i>
                                     </div>
                                     <div class="text-right">
                                         <h3 class="text-dark"><b class="counter">${clientes }</b></h3>
