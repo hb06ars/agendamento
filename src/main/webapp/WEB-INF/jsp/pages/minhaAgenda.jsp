@@ -18,6 +18,7 @@
 <script>
 function modalConfirmar(campo ){
 	document.getElementById("tabelaSolicitada").value = campo;
+	document.getElementById("acao").value = "salvar";
 	var valid = true;
 	if(document.getElementById("data").value == ''){
 		valid = false;
@@ -70,7 +71,7 @@ function editar(id, tipo){
 		document.getElementById("atualizar").style.display = "none";
 	}
 	document.getElementById("idValor").value = id;
-	document.getElementById("acao").value = 'atualizar';
+	document.getElementById("acao").value = 'salvar';
 	document.getElementById("salvar").style.display = "none";
 	document.getElementById("cancelar").style.display = "block";
 
@@ -100,7 +101,7 @@ function editar(id, tipo){
 
 <!-- start: page -->
 <c:if test="${usuario.perfil.admin || usuario.perfil.funcionario }">
-<form action="/finalizarConsulta" method="post" id="formConfirmar" accept-charset="utf-8">
+<form action="/minhaAgenda" method="post" id="formConfirmar" accept-charset="utf-8">
 <div class="row">
 	<div class="col-md-12">
 		<div data-collapsed="0" class="panel">
@@ -110,7 +111,7 @@ function editar(id, tipo){
 						<a href="#" class="panel-action panel-action-toggle" data-panel-toggle></a>
 						<a href="#" class="panel-action panel-action-dismiss" data-panel-dismiss></a>
 					</div>
-					<h2 class="panel-title" id="">Consultas </h2>
+					<h2 class="panel-title" id="">Consulta</h2>
 				</div>
 			</div>
 			<div class="panel-body">
@@ -157,7 +158,7 @@ function editar(id, tipo){
 					</div>
 					
 					<input type="hidden" id="idValor" name="idValor" value="">
-					<input type="hidden" id="acao" name="acao" value="salvar">
+					<input type="hidden" id="acao" name="acao" value="ler">
 					<input type="hidden" name="tabelaSolicitada" id="tabelaSolicitada">
 				</div>
 			</div>

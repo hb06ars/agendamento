@@ -31,16 +31,28 @@
         <script src="/assets/js/modernizr.min.js"></script>
         
     </head>
-    <body>
+    
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+	<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+	<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
+	<%@ taglib uri = "http://java.sun.com/jsp/jstl/functions" prefix = "fn" %>
+    
+    <jsp:include page="pages/includes/javaScript.jsp" />
+    
+    <body onload="iniciando()">
+    
 
         <div class="account-pages"></div>
         <div class="clearfix"></div>
+        
+		   
+
         <div class="wrapper-page">
         	<div class=" card-box">
             <div class="panel-heading"> 
                 <h3 class="text-center"> Sistema </h3><h3 class="text-center"><strong class="text-custom">Agendamento</strong> </h3>
             </div> 
-
 
             <div class="panel-body">
             <form class="form-horizontal m-t-20" action="/home" method="post" accept-charset="utf-8">
@@ -66,23 +78,20 @@
 
                 <div class="form-group m-t-30 m-b-0">
                     <div class="col-sm-12">
-                        <a href="page-recoverpw.html" class="text-dark"><i class="fa fa-lock m-r-5"></i> Esqueceu sua senha?</a>
+                        <a href="page-recoverpw.html" class="text-danger"></i> ${senhaIncorreta }</a>
                     </div>
                 </div>
             </form> 
-            
             </div>   
-            </div>                              
-                <div class="row">
-            	<div class="col-sm-12 text-center">
-            		<p>Não possui acesso? <a href="page-register.html" class="text-primary m-l-5"><b>Criar acesso</b></a></p>
-                        
-                    </div>
             </div>
-            
         </div>
         
-        
+        <c:if test="${mensagem != null}">
+			<div class="alert alert-danger">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<strong>Erro!</strong><br>${erro }
+			</div>
+		</c:if>
 
         
     	<script>

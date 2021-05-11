@@ -71,7 +71,7 @@ public class SistemaController {
 		public static String iconePaginaAtual = "fa fa-home";
 		public static Integer mesSelecionado;
 		public static Integer anoSelecionado;
-		
+		public static String senhaIncorreta = "";
 		
 		
 		public String gerarChamado() {
@@ -268,6 +268,11 @@ public class SistemaController {
 			String link = "index";
 			itemMenu = link;
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irÃ¡ acessar
+			if(!senhaIncorreta.equals("")) {
+				modelAndView.addObject("senhaIncorreta", senhaIncorreta);
+				senhaIncorreta = "";
+			}
+			
 			return modelAndView; //retorna a variavel
 		}
 		
@@ -533,7 +538,9 @@ public class SistemaController {
 					
 					
 				}
-				
+			} else {
+				senhaIncorreta = "Usuário / Senha incorretos!";
+				modelAndView.addObject("senhaIncorreta", senhaIncorreta);
 			}
 			return modelAndView; //retorna a variavel
 		}
@@ -572,6 +579,9 @@ public class SistemaController {
 						a.setPerfil(perfilDao.buscarSomenteCliente().get(0));
 						usuarioDao.save(a);
 						usuarioDao.save(a);
+						String msg = "Solicitação confirmada com sucesso!";
+						modelAndView.addObject("mensagem", msg);
+						modelAndView.addObject("tipoMensagem", "info");
 					} catch(Exception e) {
 					modelAndView.addObject("erro", e);
 					}
@@ -589,6 +599,9 @@ public class SistemaController {
 					a.setCidade(cliente.getCidade());
 					a.setEstado(cliente.getEstado());
 					usuarioDao.save(a);
+					String msg = "Atualização confirmada com sucesso!";
+					modelAndView.addObject("mensagem", msg);
+					modelAndView.addObject("tipoMensagem", "info");
 					
 				} else if(cliente.getMatricula() != null && (acao.equals("salvar")) && repetido) {
 					modelAndView.addObject("mensagem", "Já existe este CPF / Matrícula.");
@@ -633,7 +646,9 @@ public class SistemaController {
 							a.setPerfil(perfilDao.buscarFuncionario().get(0));
 						}
 						usuarioDao.save(a);
-						modelAndView.addObject("atualizarPagina", atualizarPagina);
+						String msg = "Solicitação confirmada com sucesso!";
+						modelAndView.addObject("mensagem", msg);
+						modelAndView.addObject("tipoMensagem", "info");
 					} catch(Exception e) {
 						modelAndView.addObject("erro", e);
 						System.out.println("Erro: "+e);
@@ -653,6 +668,9 @@ public class SistemaController {
 					a.setEstado(funcionario.getEstado());
 					a.setPerfil(perfilDao.buscarCodigo(perfil_codigo));
 					usuarioDao.save(a);
+					String msg = "Atualização confirmada com sucesso!";
+					modelAndView.addObject("mensagem", msg);
+					modelAndView.addObject("tipoMensagem", "info");
 				} else if(funcionario.getMatricula() != null && (acao.equals("salvar")) && repetido) {
 					modelAndView.addObject("mensagem", "Já existe este CPF / Matrícula.");
 					modelAndView.addObject("tipoMensagem", "erro");    
@@ -689,6 +707,9 @@ public class SistemaController {
 					p.setPreco(Double.parseDouble(precoValor.replace(",", ".")));
 					p.setNome(precos.getNome());
 					precoDao.save(p);
+					String msg = "Preço cadastrado com sucesso!";
+					modelAndView.addObject("mensagem", msg);
+					modelAndView.addObject("tipoMensagem", "info");
 				}
 				atualizarPagina = "/precos";
 				List<Preco> gruposTodos = precoDao.buscarTudo();
@@ -718,11 +739,13 @@ public class SistemaController {
 						if(u != null && (novaSenha.equals(confirmaSenha)) ) {
 							u.setSenha(novaSenha);
 							usuarioDao.save(u);
-							msg = "Alterado com sucesso.";
-							modelAndView.addObject("msgOk", msg);
+							msg = "Senha alterada com sucesso!";
+							modelAndView.addObject("mensagem", msg);
+							modelAndView.addObject("tipoMensagem", "info");
 						} else {
-							msg = "Usuário ou senha inválidos.";
-							modelAndView.addObject("msg", msg);
+							msg = "Usuário / Senha inválida!";
+							modelAndView.addObject("mensagem", msg);
+							modelAndView.addObject("tipoMensagem", "erro");
 						}
 					}
 				}
@@ -1028,7 +1051,7 @@ public class SistemaController {
 		
 		
 		@RequestMapping(value = "/minhaAgenda", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView minhaAgenda(String acao) throws SQLException {
+		public ModelAndView minhaAgenda(String acao, String tabelaSolicitada,Integer idValor, String data_str, String inicioHora_str, String fimHora_str, String cliente_str, String servico_str, String preco_str, String observacao_str) throws SQLException {
 			paginaAtual = "Minha Agenda";
 			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
 			String link = verificaLink("pages/minhaAgenda");
@@ -1040,9 +1063,54 @@ public class SistemaController {
 			if(logado) {
 				//... Salvando dados.
 				if(acao != null) {
-					Preco p = new Preco();
-					if(acao.equals("atualizar")) {
-						System.out.println("Atualizando");
+					if(acao.equals("salvar")) {
+						Consulta c = consultaDao.findById(idValor).get();
+						Boolean valido = false;
+						List<Consulta> validacao = consultaDao.buscarInvalidosDuasDatas(idValor ,usuarioSessao.getId(), data_str, inicioHora_str, fimHora_str);
+						if( validacao.size() == 0 ) {
+							valido = true;
+							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); 
+							LocalDateTime dateTime = LocalDateTime.parse(data_str+" "+inicioHora_str, formatter);
+							c.setInicio(dateTime);
+							dateTime = LocalDateTime.parse(data_str+" "+fimHora_str, formatter);
+							c.setFim(dateTime);
+							formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); 
+							dateTime = LocalDateTime.parse(data_str+" 00:00", formatter);
+							c.setData(dateTime);
+						}preco_str = preco_str.replace("R$", "").replace(",", ".");
+						Double va = Double.parseDouble(preco_str);
+						if(va >= 0) {
+							c.setPreco(va);
+						} else {
+							 String msg = "O Valor deve ser maior ou igual a zero.";
+							 modelAndView.addObject("mensagem", msg);
+							 modelAndView.addObject("tipoMensagem", "erro");  
+						}
+						c.setObservacoes(observacao_str);
+						if(tabelaSolicitada.equals("confirmar") && valido && va >= 0) {
+							c.setProfissional(usuarioSessao);
+							c.setConfirmado(true);
+							c.setCancelado(false);
+							consultaDao.save(c);
+							 String msg = "Solicitação confirmada com sucesso!";
+							 modelAndView.addObject("mensagem", msg);
+							 modelAndView.addObject("tipoMensagem", "info");
+						}
+						if(tabelaSolicitada.equals("confirmar") && !valido) {
+							 String msg = "Data inválida.";
+							 modelAndView.addObject("mensagem", msg);
+							 modelAndView.addObject("tipoMensagem", "erro");
+						}
+						if(tabelaSolicitada.equals("recusar")) {
+							if(c.getProfissional() != null) {
+								c.setConfirmado(false);
+								c.setCancelado(true);
+								consultaDao.save(c);
+								 String msg = "Solicitação recusada com sucesso.";
+								 modelAndView.addObject("mensagem", msg);
+								 modelAndView.addObject("tipoMensagem", "erro");  
+							}
+						}
 					}
 				}
 				atualizarPagina = "/minhaAgenda";
@@ -1056,78 +1124,6 @@ public class SistemaController {
 		
 		
 		
-		@RequestMapping(value = "/finalizarConsulta", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET, RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView finalizarConsulta(String tabelaSolicitada,Integer idValor, String data_str, String inicioHora_str, String fimHora_str, String cliente_str, String servico_str, String preco_str, String observacao_str) throws SQLException {
-			System.out.println("Tabela: "+tabelaSolicitada);
-			System.out.println("idAltera: "+idValor);
-			paginaAtual = "Minha Agenda";
-			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = verificaLink("pages/minhaAgenda");
-			itemMenu = link;
-			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
-			modelAndView.addObject("usuario", usuarioSessao);
-			modelAndView.addObject("paginaAtual", paginaAtual); 
-			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
-			if(logado) {
-				link = verificaLink("pages/minhaAgenda");
-				modelAndView = new ModelAndView(link);
-				paginaAtual = "Minha Agenda";
-				Consulta c = consultaDao.findById(idValor).get();
-				Boolean valido = false;
-				System.out.println("data_str: " + data_str );
-				System.out.println("inicioHora_str: " + inicioHora_str );
-				System.out.println("fimHora_str: " + fimHora_str );
-				
-				List<Consulta> validacao = consultaDao.buscarInvalidosDuasDatas(idValor ,usuarioSessao.getId(), data_str, inicioHora_str, fimHora_str);
-				
-				if( validacao.size() == 0 ) {
-					valido = true;
-					
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); 
-					LocalDateTime dateTime = LocalDateTime.parse(data_str+" "+inicioHora_str, formatter);
-					c.setInicio(dateTime);
-					dateTime = LocalDateTime.parse(data_str+" "+fimHora_str, formatter);
-					c.setFim(dateTime);
-					formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"); 
-					dateTime = LocalDateTime.parse(data_str+" 00:00", formatter);
-					c.setData(dateTime);
-				}
-				
-				System.out.println("valido: "+valido);
-				System.out.println("validacao1.size(): "+validacao.size());
-				
-				
-				preco_str = preco_str.replace("R$", "").replace(",", ".");
-				Double va = Double.parseDouble(preco_str);
-				if(va >= 0) {
-					c.setPreco(va);
-				} else {
-					String msg = "O Valor deve ser maior ou igual a zero.";
-					 modelAndView.addObject("mensagem", msg);
-					 modelAndView.addObject("tipoMensagem", "erro");  
-				}
-				c.setObservacoes(observacao_str);
-				if(tabelaSolicitada.equals("confirmar") && valido) {
-					c.setProfissional(usuarioSessao);
-					c.setConfirmado(true);
-					c.setCancelado(false);
-					consultaDao.save(c);
-				} 
-				if(tabelaSolicitada.equals("recusar")) {
-					if(c.getProfissional() != null) {
-						c.setConfirmado(false);
-						c.setCancelado(true);
-						consultaDao.save(c);
-					}
-				}
-				atualizarPagina = "/minhaAgenda";
-				List<Consulta> consultas = consultaDao.buscarTudo();
-				modelAndView.addObject("consultas", consultas);
-				modelAndView.addObject("paginaAtual", paginaAtual);
-				modelAndView.addObject("atualizarPagina", atualizarPagina);
-			}
-			return modelAndView; //retorna a variavel
-		}
 		
 		
 		

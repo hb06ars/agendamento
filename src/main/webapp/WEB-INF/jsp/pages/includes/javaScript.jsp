@@ -19,10 +19,8 @@ function fullScreen(){
 function iniciando(){
 	var msg = '${mensagem}' + '';
 	if (msg != ''){
-		if('${tipoMensagem}' == 'info'){
-			mensagem('${tituloMensagem}','${mensagem}');	
-		} else if('${tipoMensagem}' == 'erro'){
-			mensagemErro('${tituloMensagem}','${mensagem}');
+		if('${tipoMensagem}' == 'erro'){
+			mensagemErro('Erro','${mensagem}');
 		} else{
 			mensagem('Atenção','${mensagem}');
 		}
