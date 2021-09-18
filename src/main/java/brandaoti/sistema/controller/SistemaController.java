@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.Random;
 
 import javax.persistence.Column;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.xmlbeans.impl.store.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +54,9 @@ import brandaoti.sistema.model.Usuario;
 @RestController
 @RequestMapping("/")
 @CrossOrigin("*")
-public class SistemaController {
-		
+public class SistemaController extends HttpServlet {
+
+		private static final long serialVersionUID = 1L;
 		@Autowired
 		private UsuarioDao usuarioDao;
 		@Autowired
@@ -63,18 +68,18 @@ public class SistemaController {
 		@Autowired
 		private ConsultaDao consultaDao;
 		
-		public static Usuario usuarioSessao;
-		public static String atualizarPagina = null;
-		public static Boolean logado = false;
-		public static String itemMenu = "home";
-		public static String paginaAtual = "Dashboard";
-		public static String iconePaginaAtual = "fa fa-home";
-		public static Integer mesSelecionado;
-		public static Integer anoSelecionado;
-		public static String senhaIncorreta = "";
+		//public static Usuario usuarioSessao;
+		//public static String atualizarPagina = null;
+		//public static Boolean logado = false;
+		//public static String itemMenu = "home";
+		//public static String paginaAtual = "Dashboard";
+		//public static String iconePaginaAtual = "fa fa-home";
+		//public static Integer mesSelecionado;
+		//public static Integer anoSelecionado;
+		//public static String senhaIncorreta = "";
 		
 		
-		public String gerarChamado() {
+		public String gerarChamado(Usuario usuarioSessao) {
 			Random gerador = new Random();
 	    	Calendar data = Calendar.getInstance();
 	    	int ano = data.get(Calendar.YEAR);
@@ -90,7 +95,7 @@ public class SistemaController {
 	        return chamado;
 		}
 		
-		public String gerarMatricula() {
+		public String gerarMatricula(Usuario usuarioSessao) {
 			Random gerador = new Random();
 	    	Calendar data = Calendar.getInstance();
 	    	int ano = data.get(Calendar.YEAR);
@@ -106,7 +111,7 @@ public class SistemaController {
 	        return matricula;
 		}
 		
-		public void resetaMes() {
+		public void resetaMes(Integer mesSelecionado, Integer anoSelecionado ) {
 			Calendar calendar = new GregorianCalendar();
 			mesSelecionado = calendar.get(Calendar.MONTH);
 			mesSelecionado = mesSelecionado+1;
@@ -114,8 +119,30 @@ public class SistemaController {
 		}
 		
 		@RequestMapping(value = {"/","/login"}, produces = "text/plain;charset=UTF-8", method = RequestMethod.GET) // Pagina de Vendas
-		public ModelAndView login(@RequestParam(value = "nome", required = false, defaultValue = "Henrique Brandão") String nome) throws SQLException { //Funcao e alguns valores que recebe...
+		public ModelAndView login(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "nome", required = false, defaultValue = "Henrique Brandão") String nome) throws SQLException { //Funcao e alguns valores que recebe...
 			//Caso não haja registros
+			HttpSession session = request.getSession();
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			Integer mesSelecionado = 0;
+			Integer anoSelecionado = 0;
+			String itemMenu = "";
+			String atualizarPagina = "";
+			String senhaIncorreta = "";
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+			}
+			if(session.getAttribute("mesSelecionado") != null) {
+				mesSelecionado = (Integer) session.getAttribute("mesSelecionado");
+			}
+			if(session.getAttribute("anoSelecionado") != null) {
+				anoSelecionado = (Integer) session.getAttribute("anoSelecionado");
+			}
+			
+			
 			List<Usuario> u = usuarioDao.buscarTudo();
 			List<Perfil> p = perfilDao.buscarTudo();
 			List<Preco> pl = precoDao.buscarTudo();
@@ -272,38 +299,37 @@ public class SistemaController {
 				modelAndView.addObject("senhaIncorreta", senhaIncorreta);
 				senhaIncorreta = "";
 			}
+			session.setAttribute("mesSelecionado", mesSelecionado);
+			session.setAttribute("anoSelecionado", anoSelecionado);
 			
 			return modelAndView; //retorna a variavel
 		}
 		
-		public String verificaLink(String link) {
-			atualizarPagina = null;
-			String direcao = "/pages/deslogar";
-			if(logado) {
-				direcao = link;
-			} else {
-				direcao = "/pages/deslogar";
-			}
-			return direcao;
-		}
-		
 		@RequestMapping(value = "/deslogar", method = {RequestMethod.POST, RequestMethod.GET}) // Link que irÃ¡ acessar...
-		public ModelAndView deslogar() { //Funcao e alguns valores que recebe...
-			ModelAndView modelAndView = new ModelAndView("/pages/deslogar"); //JSP que irao acessar
-			usuarioSessao = null;
-			logado = false;
-			return modelAndView; //retorna a variavel
+		public void deslogar(HttpServletRequest request, HttpServletResponse response ) throws IOException { //Funcao e alguns valores que recebe...
+			HttpSession session = request.getSession();
+			session.invalidate();
+			response.sendRedirect("/");
 		}
 		
 		
 		@RequestMapping(value = "/deletando", method = {RequestMethod.GET, RequestMethod.POST}) // Pagina de Alteração de Perfil
-		public ModelAndView deletando(String tabela,Integer id) { //Função e alguns valores que recebe...
-			paginaAtual = "Clientes";
-			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = verificaLink("pages/clientes");
-			itemMenu = link;
+		public ModelAndView deletando(HttpServletRequest request, HttpServletResponse response, String tabela,Integer id) { //Função e alguns valores que recebe...
+			String paginaAtual = "Clientes";
+			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = "pages/clientes";
+			String itemMenu = link;
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
-			
+			HttpSession session = request.getSession();
+			String atualizarPagina = "";
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+			}
 			if(logado) {
 				//Caso esteja logado.
 				if(tabela.equals("usuario")) {
@@ -331,7 +357,7 @@ public class SistemaController {
 					atualizarPagina = "/funcionarios";
 				}
 				if(tabela.equals("precos")) {
-					link = verificaLink("pages/precos");
+					link = "pages/precos";
 					modelAndView = new ModelAndView(link);
 					paginaAtual = "Cadastrar novo Preço";
 					precoDao.delete(precoDao.findById(id).get());
@@ -340,7 +366,7 @@ public class SistemaController {
 					atualizarPagina = "/precos";
 				}
 				if(tabela.equals("consultas")) {
-					link = verificaLink("pages/minhaAgenda");
+					link = "pages/minhaAgenda";
 					modelAndView = new ModelAndView(link);
 					paginaAtual = "Minha Agenda";
 					consultaDao.delete(consultaDao.findById(id).get());
@@ -360,11 +386,21 @@ public class SistemaController {
 		
 		/* SALVAR EXCEL */
 		@RequestMapping(value = "/upload/excel", method = {RequestMethod.POST, RequestMethod.GET}) // Pagina de Alteração de Perfil
-		public ModelAndView uploadExcel(Model model, String tabelaUsada, @ModelAttribute MultipartFile file) throws Exception, IOException { //Função e alguns valores que recebe...
-			paginaAtual = "Home";
-			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = verificaLink("pages/home");
-			itemMenu = link;
+		public ModelAndView uploadExcel(HttpServletRequest request, HttpServletResponse response, Model model, String tabelaUsada, @ModelAttribute MultipartFile file) throws Exception, IOException { //Função e alguns valores que recebe...
+			String paginaAtual = "Home";
+			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = "pages/home";
+			String itemMenu = link;
+			HttpSession session = request.getSession();
+			String atualizarPagina = "";
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+			}
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
 			modelAndView.addObject("usuario", usuarioSessao);
 			modelAndView.addObject("paginaAtual", paginaAtual); 
@@ -379,7 +415,7 @@ public class SistemaController {
 		   		int coluna = 0;
 				switch (tabelaUsada) {  
 				 case "aulas" : // CASO SEJA AULAS ---------------------
-					 	link = verificaLink("pages/aulas");
+					 	link = "pages/aulas");
 					 	modelAndView = new ModelAndView(link);
 					 	paginaAtual = "Aulas";
 						iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
@@ -484,27 +520,49 @@ public class SistemaController {
 		
 		
 		@RequestMapping(value = "/home", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView home(@RequestParam(value = "usuarioVal", defaultValue = "") String usuarioVal, @RequestParam(value = "senhaVal", defaultValue = "") String senhaVal) throws SQLException {
-			String link = verificaLink("home");
+		public ModelAndView home(HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "usuarioVal", defaultValue = "") String usuarioVal, @RequestParam(value = "senhaVal", defaultValue = "") String senhaVal) throws SQLException {
+			String link = "home";
 			List<Consulta> consultas = new ArrayList<Consulta>();
 			Integer confirmada = 0;
 			Integer recusada = 0;
 			Integer clientes = usuarioDao.buscarClientes().size();
 			Integer pendentes = consultaDao.buscarPendentes().size();
-
-			itemMenu = link;
-			if(usuarioSessao == null) {
+			HttpSession session = request.getSession();
+			String atualizarPagina = "";
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			String paginaAtual = "";
+			String iconePaginaAtual = ""; //Titulo do menuzinho.
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+			}
+			String itemMenu = link;
+			if(usuarioSessao.getId() == null) {
 				Usuario u = usuarioDao.fazerLogin(usuarioVal, senhaVal);
 				usuarioSessao = u;
+				if(u != null && u.getId() != null) {
+					session.setAttribute("usuarioSessao",usuarioSessao);
+					session.setAttribute("logado",logado);
+					link = "pages/home"; //Colocar regra se for ADM ou Aluno.
+					logado=true;
+					paginaAtual = "Consulta";
+					iconePaginaAtual = "fa fa-cogs"; //Titulo do menuzinho.
+					consultas = consultaDao.buscarMinhaAgendaOrdenadaData(usuarioSessao.getId());
+				}
 			}
-			if((usuarioSessao != null) || logado) {
+			if((usuarioSessao != null && usuarioSessao.getId() != null) || logado) {
+				session.setAttribute("usuarioSessao",usuarioSessao);
+				session.setAttribute("logado",logado);
+				link = "pages/home"; //Colocar regra se for ADM ou Aluno.
 				logado=true;
 				paginaAtual = "Consulta";
 				iconePaginaAtual = "fa fa-cogs"; //Titulo do menuzinho.
-				link = verificaLink("pages/home"); //Colocar regra se for ADM ou Aluno.
 				consultas = consultaDao.buscarMinhaAgendaOrdenadaData(usuarioSessao.getId());
 								
-				if(usuarioSessao.getPerfil().getFuncionario()) {
+				if(usuarioSessao!= null && usuarioSessao.getId() != null && usuarioSessao.getPerfil() != null && usuarioSessao.getPerfil().getFuncionario()) {
 					for(Consulta c : consultas) {
 						if(c.getProfissional() == usuarioSessao) {
 							if(c.getConfirmado()) confirmada++;
@@ -513,7 +571,7 @@ public class SistemaController {
 						}
 					}
 				}
-				if(usuarioSessao.getPerfil().getCliente()) {
+				if(usuarioSessao!= null && usuarioSessao.getId() != null && usuarioSessao.getPerfil() != null && usuarioSessao.getPerfil().getCliente()) {
 					for(Consulta c : consultas) {
 						if(c.getConfirmado()) confirmada++;
 						if(c.getCancelado()) recusada++;
@@ -522,7 +580,7 @@ public class SistemaController {
 				
 			} else {
 				logado=false;
-				link = verificaLink("pages/deslogar"); 
+				link = "pages/deslogar"; 
 			}
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
 			modelAndView.addObject("confirmada", confirmada);
@@ -533,27 +591,32 @@ public class SistemaController {
 			modelAndView.addObject("usuario", usuarioSessao);
 			modelAndView.addObject("paginaAtual", paginaAtual); 
 			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
-			if(logado) {
-				if(usuarioSessao.getPerfil().getAdmin()) {
-					
-					
-				}
-			} else {
-				senhaIncorreta = "Usuário / Senha incorretos!";
+			if(!logado) {
+				String senhaIncorreta = "Usuário / Senha incorretos!";
 				modelAndView.addObject("senhaIncorreta", senhaIncorreta);
+				link = "pages/deslogar"; 
 			}
 			return modelAndView; //retorna a variavel
 		}
 
 		
 		@RequestMapping(value = "/clientes", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView clientes(Usuario cliente, String acao ) throws SQLException, ParseException {
-			paginaAtual = "Clientes";
-			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = verificaLink("pages/clientes");
-			itemMenu = link;
+		public ModelAndView clientes(HttpServletRequest request, HttpServletResponse response, Usuario cliente, String acao ) throws SQLException, ParseException {
+			String paginaAtual = "Clientes";
+			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = "pages/clientes";
+			String itemMenu = link;
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
-			
+			HttpSession session = request.getSession();
+			String atualizarPagina = "";
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+			}
 			List<Preco> grupos = precoDao.buscarTudo();
 			modelAndView.addObject("grupos", grupos);			
 			modelAndView.addObject("usuario", usuarioSessao);
@@ -563,7 +626,7 @@ public class SistemaController {
 			
 			if(logado) {
 				//Gerando matrícula aleatória
-				String matriculaPadrao = gerarMatricula();
+				String matriculaPadrao = gerarMatricula(usuarioSessao);
 				modelAndView.addObject("matriculaPadrao", matriculaPadrao);
 				
 				Boolean repetido = false;
@@ -616,18 +679,28 @@ public class SistemaController {
 		
 		
 		@RequestMapping(value = "/funcionarios", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView funcionarios(Usuario funcionario, String acao, String perfil_codigo, String grupo_codigo) throws SQLException {
-			paginaAtual = "Funcionários";
-			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = verificaLink("pages/funcionarios");
-			itemMenu = link;
+		public ModelAndView funcionarios(HttpServletRequest request, HttpServletResponse response, Usuario funcionario, String acao, String perfil_codigo, String grupo_codigo) throws SQLException {
+			String paginaAtual = "Funcionários";
+			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = "pages/funcionarios";
+			String itemMenu = link;
+			HttpSession session = request.getSession();
+			String atualizarPagina = "";
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+			}
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
 			modelAndView.addObject("usuario", usuarioSessao);
 			modelAndView.addObject("paginaAtual", paginaAtual); 
 			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
 			if(logado) {
 				//Gerando matrícula aleatória
-				String matriculaPadrao = gerarMatricula();
+				String matriculaPadrao = gerarMatricula(usuarioSessao);
 				modelAndView.addObject("matriculaPadrao", matriculaPadrao);
 				
 				Boolean repetido = false;
@@ -687,12 +760,22 @@ public class SistemaController {
 		
 		
 		@RequestMapping(value = "/precos", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView grupos(String acao, Preco precos, String precoValor, Integer idValor) throws SQLException {
-			paginaAtual = "Preços";
-			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = verificaLink("pages/precos");
-			itemMenu = link;
+		public ModelAndView grupos(HttpServletRequest request, HttpServletResponse response, String acao, Preco precos, String precoValor, Integer idValor) throws SQLException {
+			String paginaAtual = "Preços";
+			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = "pages/precos";
+			String itemMenu = link;
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
+			HttpSession session = request.getSession();
+			String atualizarPagina = "";
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+			}
 			modelAndView.addObject("usuario", usuarioSessao);
 			modelAndView.addObject("paginaAtual", paginaAtual); 
 			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
@@ -721,12 +804,22 @@ public class SistemaController {
 		
 		
 		@RequestMapping(value = "/alterarSenha", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView alterarSenha(Integer acao, String matricula,String senha,String novaSenha,String confirmaSenha) throws SQLException {
-			paginaAtual = "Alterar Senha";
-			iconePaginaAtual = "fa fa-key"; //Titulo do menuzinho.
-			String link = verificaLink("pages/alterarSenha");
-			itemMenu = link;
+		public ModelAndView alterarSenha(HttpServletRequest request, HttpServletResponse response, Integer acao, String matricula,String senha,String novaSenha,String confirmaSenha) throws SQLException {
+			String paginaAtual = "Alterar Senha";
+			String iconePaginaAtual = "fa fa-key"; //Titulo do menuzinho.
+			String link = "pages/alterarSenha";
+			String itemMenu = link;
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
+			HttpSession session = request.getSession();
+			String atualizarPagina = "";
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+			}
 			modelAndView.addObject("usuario", usuarioSessao);
 			modelAndView.addObject("paginaAtual", paginaAtual); 
 			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
@@ -756,306 +849,341 @@ public class SistemaController {
 		
 		
 		@RequestMapping(value = "/agendamento", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView agendamento(Boolean salvar, Boolean proximo, Boolean anterior, Integer mesAtual,   String nomeCliente, String dataSubmit, String horaEscolhida, String servicoSelecionado, String profissionalSelecionado, String precoSubmit, String obs ) throws SQLException, ParseException {
-			//Salvando ------------------------------------------------------------
-			String msg = "";
-			Boolean erro = false;
-			try {
-				Integer i = Integer.parseInt(servicoSelecionado);
-			}catch(Exception e) {
-				if(profissionalSelecionado != null) {
-					salvar = null;
-					msg = "Serviço não selecionado.";
-					erro = true;
-				}
-			}
-			if(salvar!= null && salvar) {
-				System.out.println("nomeCliente: "+nomeCliente);
-				System.out.println("dataSubmit: "+dataSubmit);
-				System.out.println("horaEscolhida: "+horaEscolhida);
-				System.out.println("servicoSelecionado: "+servicoSelecionado);
-				System.out.println("profissionalSelecionado: "+profissionalSelecionado);
-				System.out.println("precoTexto: "+precoSubmit);
-				System.out.println("obs: "+obs);
-
-				Consulta c = new Consulta ();
-				c.setAtivo(true);
-				c.setCancelado(false);
-				c.setCliente(nomeCliente);
-				if(usuarioSessao.getPerfil().getCliente() && !usuarioSessao.getPerfil().getAdmin() && !usuarioSessao.getPerfil().getFuncionario()) {
-					c.setClienteSistema(usuarioSessao);
-				}
-				c.setConfirmado(false);
-				
-				String str = dataSubmit+" 00:00";
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-				LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
-				c.setData(dateTime);
-				
-				str = dataSubmit+" "+horaEscolhida;
-				dateTime = LocalDateTime.parse(str, formatter);
-				c.setInicio(dateTime);
-				c.setFim(dateTime);
-				c.setPreco(precoDao.findById(Integer.parseInt(servicoSelecionado)).get().getPreco());
-				if(!profissionalSelecionado.equals("")) {
-					c.setProfissional(usuarioDao.findById(Integer.parseInt(profissionalSelecionado)).get());
-				}
-				c.setServico(precoDao.findById(Integer.parseInt(servicoSelecionado)).get());
-				c.setObservacoes(obs);
-				
-				//Favor validar se este profissional possui data disponivel neste periodo antes de salvar
-				String s = dataSubmit.substring(6, 10) + "-" + dataSubmit.substring(3, 5) + "-" + dataSubmit.substring(0, 2);
-				List<Consulta> consultas = consultaDao.buscarInvalidos(usuarioSessao.getId(),s,horaEscolhida);
-				
-				
-				if(consultas.size() == 0) {
-					consultaDao.save(c);
-					msg = "Solicitado a reserva.";
-					erro = false;
-				} else {
-					msg = "Data e Horário inválidos.";
-					erro = true;
-				}
-				
-				
-				
-			}
+		public ModelAndView agendamento(HttpServletRequest request, HttpServletResponse response, Boolean salvar, Boolean proximo, Boolean anterior, Integer mesAtual,   String nomeCliente, String dataSubmit, String horaEscolhida, String servicoSelecionado, String profissionalSelecionado, String precoSubmit, String obs ) throws SQLException, ParseException {
 			//Salvando ------------------------------------------------------------
 			
-			
-			
-			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");	
-		    Calendar calendar = new GregorianCalendar();
-		    
-			if(proximo != null && proximo) {
-				mesSelecionado = mesSelecionado+1;
-				if(mesSelecionado > 12) {
-					mesSelecionado = 1;
-					anoSelecionado = anoSelecionado + 1;
-				}
+			ModelAndView modelAndView = new ModelAndView("pages/deslogar"); //JSP que irá acessar.
+			HttpSession session = request.getSession();
+			String atualizarPagina = "";
+			Usuario usuarioSessao = new Usuario();
+			Boolean logado = false;
+			Integer mesSelecionado = 0;
+			Integer anoSelecionado = 0;
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			} else {
+				modelAndView = new ModelAndView("pages/deslogar"); //JSP que irá acessar.
+				return modelAndView;
 			}
-			if(anterior != null && anterior) {
-				mesSelecionado = mesSelecionado-1;
-				if(mesSelecionado < 1) {
-					mesSelecionado = 12;
-					anoSelecionado = anoSelecionado - 1;
-				}
+			if(session.getAttribute("usuarioSessao") != null) {
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
+				modelAndView = new ModelAndView("pages/agendamento"); //JSP que irá acessar.
 			}
-			if((proximo == null && anterior == null) || calendar.get(Calendar.MONTH) == (mesSelecionado-1) ) {
-				proximo = null;
-				anterior = null;
-				resetaMes();
+			if(session.getAttribute("mesSelecionado") != null) {
+				mesSelecionado = (Integer) session.getAttribute("mesSelecionado");
 			}
-			
-			paginaAtual = "Agendamento";
-			iconePaginaAtual = "fa fa-calendar"; //Titulo do menuzinho.
-			String link = verificaLink("pages/agendamento");
-			itemMenu = link;
-			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
-			modelAndView.addObject("usuario", usuarioSessao);
-			modelAndView.addObject("paginaAtual", paginaAtual); 
-			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
+			if(session.getAttribute("anoSelecionado") != null) {
+				anoSelecionado = (Integer) session.getAttribute("anoSelecionado");
+			}
 			if(logado) {
-				int maxDiasMes = 28;
-				List<Integer> listaDias = new ArrayList<Integer>();
-				
-				int ano = anoSelecionado;
-			    int mes = 0;
-			    int dia = 1;
-			    
-			    if(proximo == null && anterior == null ) {
-			    	mes = calendar.get(Calendar.MONTH);
-			    	mes++;
-			    	dia = calendar.get(Calendar.DAY_OF_MONTH);
-			    } else {
-			    	mes = mesSelecionado;
-			    	dia = 1;
-			    }
-			     
-			    String semana = "";
-			    String mesStr = "";
-			    
-			    //String dia val
-			    String diaVal = "";
-			    if(dia < 10) {
-			    	diaVal = "0"+dia;
-			    } else {
-			    	diaVal = ""+dia;
-			    }
-			    
-			    //Primeiro dia da semana do mes:
-			    String diaPrimeiroSemana = "---";
-			    GregorianCalendar gc = new GregorianCalendar();
-			    GregorianCalendar primeiro = new GregorianCalendar();
-			    if((proximo == null && anterior == null) || calendar.get(Calendar.MONTH) == (mesSelecionado-1) ) {
-			    	gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(diaVal+"/"+mes+"/"+ano));
-			    } else {
-			    	gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
-			    }
-			    int semanaVal  = gc.get(Calendar.DAY_OF_WEEK);
-			    
-			    primeiro.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
-			    switch (primeiro.get(Calendar.DAY_OF_WEEK)) {
-		            case Calendar.SUNDAY:
-		            	diaPrimeiroSemana = "DOM";
-		                break;
-		            case Calendar.MONDAY:
-		            	diaPrimeiroSemana = "SEG";
-		                break;
-		            case Calendar.TUESDAY:
-		            	diaPrimeiroSemana = "TER";
-		            break;
-		            case Calendar.WEDNESDAY:
-		            	diaPrimeiroSemana = "QUA";
-		                break;
-		            case Calendar.THURSDAY:
-		            	diaPrimeiroSemana = "QUI";
-		                break;
-		            case Calendar.FRIDAY:
-		            	diaPrimeiroSemana = "SEX";
-		                break;
-		            case Calendar.SATURDAY:
-		            	diaPrimeiroSemana = "SAB";
-			    }
-			    
-			    switch(semanaVal) {
-				    case 1:
-				    	semana = "Domingo";
-				    	break;
-				    case 2:
-				    	semana = "Segunda-Feira";
-				    	break;
-				    case 3:
-				    	semana = "Terça-Feira";
-				    	break;
-				    case 4:
-				    	semana = "Quarta-Feira";
-				    	break;
-				    case 5:
-				    	semana = "Quinta-Feira";
-				    	break;
-				    case 6:
-				    	semana = "Sexta-Feira";
-				    	break;
-				    case 7:
-				    	semana = "Sábado";
-				    	break;
-				    default:
+				String msg = "";
+				Boolean erro = false;
+				try {
+					Integer i = Integer.parseInt(servicoSelecionado);
+				}catch(Exception e) {
+					if(profissionalSelecionado != null) {
+						salvar = null;
+						msg = "Serviço não selecionado.";
+						erro = true;
+					}
 				}
+				if(salvar!= null && salvar) {
+					System.out.println("nomeCliente: "+nomeCliente);
+					System.out.println("dataSubmit: "+dataSubmit);
+					System.out.println("horaEscolhida: "+horaEscolhida);
+					System.out.println("servicoSelecionado: "+servicoSelecionado);
+					System.out.println("profissionalSelecionado: "+profissionalSelecionado);
+					System.out.println("precoTexto: "+precoSubmit);
+					System.out.println("obs: "+obs);
+
+					Consulta c = new Consulta ();
+					c.setAtivo(true);
+					c.setCancelado(false);
+					c.setCliente(nomeCliente);
+					if(usuarioSessao.getPerfil().getCliente() && !usuarioSessao.getPerfil().getAdmin() && !usuarioSessao.getPerfil().getFuncionario()) {
+						c.setClienteSistema(usuarioSessao);
+					}
+					c.setConfirmado(false);
+					
+					String str = dataSubmit+" 00:00";
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+					LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+					c.setData(dateTime);
+					
+					str = dataSubmit+" "+horaEscolhida;
+					dateTime = LocalDateTime.parse(str, formatter);
+					c.setInicio(dateTime);
+					c.setFim(dateTime);
+					c.setPreco(precoDao.findById(Integer.parseInt(servicoSelecionado)).get().getPreco());
+					if(!profissionalSelecionado.equals("")) {
+						c.setProfissional(usuarioDao.findById(Integer.parseInt(profissionalSelecionado)).get());
+					}
+					c.setServico(precoDao.findById(Integer.parseInt(servicoSelecionado)).get());
+					c.setObservacoes(obs);
+					
+					//Favor validar se este profissional possui data disponivel neste periodo antes de salvar
+					String s = dataSubmit.substring(6, 10) + "-" + dataSubmit.substring(3, 5) + "-" + dataSubmit.substring(0, 2);
+					List<Consulta> consultas = consultaDao.buscarInvalidos(usuarioSessao.getId(),s,horaEscolhida);
+					
+					
+					if(consultas.size() == 0) {
+						consultaDao.save(c);
+						msg = "Solicitado a reserva.";
+						erro = false;
+					} else {
+						msg = "Data e Horário inválidos.";
+						erro = true;
+					}
+					
+					
+					
+				}
+				//Salvando ------------------------------------------------------------
+				
+				
+				
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd HH:mm:ss");	
+			    Calendar calendar = new GregorianCalendar();
 			    
-			    switch(mes) {
-				    case 1:
-				    	mesStr = "Janeiro";
-				    	break;
-				    case 2:
-				    	mesStr = "Fevereiro";
-				    	break;
-				    case 3:
-				    	mesStr = "Mar&ccedil;o";
-				    	break;
-				    case 4:
-				    	mesStr = "Abril";
-				    	break;
-				    case 5:
-				    	mesStr = "Maio";
-				    	break;
-				    case 6:
-				    	mesStr = "Junho";
-				    	break;
-				    case 7:
-				    	mesStr = "Julho";
-				    	break;
-				    case 8:
-				    	mesStr = "Agosto";
-				    	break;
-				    case 9:
-				    	mesStr = "Setembro";
-				    	break;
-				    case 10:
-				    	mesStr = "Outubro";
-				    	break;
-				    case 11:
-				    	mesStr = "Novembro";
-				    	break;
-				    case 12:
-				    	mesStr = "Dezembro";
-				    	break;
-				    default:
-			  }
-			  
-			    
-			  
-			  
-			  if(proximo == null && anterior == null ) {
-				  Calendar datas = new GregorianCalendar();
-			      datas.set(Calendar.MONTH, Calendar.MONTH);//2
-			      maxDiasMes = datas.getActualMaximum (Calendar.DAY_OF_MONTH);
-			      for(int i = 1; i <= maxDiasMes; i++) {
-			        	listaDias.add(i);
-			      }
-			  } else {
-				  GregorianCalendar gcb = new GregorianCalendar();
-				  gcb.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
-			      maxDiasMes = gcb.getActualMaximum (Calendar.DAY_OF_MONTH);
-			      for(int i = 1; i <= maxDiasMes; i++) {
-			        	listaDias.add(i);
-			      }
-			  }
-			    
-		        
-			  
-		        
-		      System.out.println("Ano \t\t: " + ano);
-		      System.out.println("Mês \t\t: " + mes);
-		      System.out.println("MêsStr \t\t: " + mesStr);
-			  System.out.println("Dia \t\t: " + dia);
-			  System.out.println("Dia da Semana \t: " + semana);
-			  System.out.println("Primeiro dia da Semana \t: " + diaPrimeiroSemana);
-			  System.out.println("Máximo mês \t: " + maxDiasMes);
-			  System.out.println("-----------------------------------------------------------------");
-		      
-			  
-			  modelAndView.addObject("mesSelecionado", mesSelecionado);
-			  modelAndView.addObject("maxDiasMes", maxDiasMes);
-			  modelAndView.addObject("hoje", "Dia " + diaVal + ": " + semana);
-			  modelAndView.addObject("diaVal", diaVal);
-			  modelAndView.addObject("dia", dia);
-			  modelAndView.addObject("mes", mesStr);
-			  if(mes < 10) {
-				  modelAndView.addObject("mesNumero", "0"+mes);
-			  } else {
-				  modelAndView.addObject("mesNumero", mes);
-			  }
-			  modelAndView.addObject("ano", ano);
-			  modelAndView.addObject("listaDias", listaDias);
-			  modelAndView.addObject("diaPrimeiroSemana", diaPrimeiroSemana);
-			  
-			  
-			  List<Usuario> funcionarios = usuarioDao.buscarFuncionarios();
-			  modelAndView.addObject("funcionarios", funcionarios);
-			  List<Preco> precos = precoDao.buscarTudo();
-			  modelAndView.addObject("precos", precos);
-			  List<Consulta> consultas = consultaDao.buscarTudo();
-			  modelAndView.addObject("consultas", consultas);
-			  modelAndView.addObject("mensagem", msg);
-			  if(erro) {
-				  modelAndView.addObject("tipoMensagem", "erro");  
-			  } else {
-				  modelAndView.addObject("tipoMensagem", "info");
-			  }
-			  
+				if(proximo != null && proximo) {
+					mesSelecionado = mesSelecionado+1;
+					if(mesSelecionado > 12) {
+						mesSelecionado = 1;
+						anoSelecionado = anoSelecionado + 1;
+					}
+				}
+				if(anterior != null && anterior) {
+					mesSelecionado = mesSelecionado-1;
+					if(mesSelecionado < 1) {
+						mesSelecionado = 12;
+						anoSelecionado = anoSelecionado - 1;
+					}
+				}
+				if((proximo == null && anterior == null) || calendar.get(Calendar.MONTH) == (mesSelecionado-1) ) {
+					proximo = null;
+					anterior = null;
+					resetaMes( mesSelecionado, anoSelecionado);
+				}
+				
+				String paginaAtual = "Agendamento";
+				String iconePaginaAtual = "fa fa-calendar"; //Titulo do menuzinho.
+				String link = "pages/agendamento";
+				String itemMenu = link;
+				modelAndView.addObject("usuario", usuarioSessao);
+				modelAndView.addObject("paginaAtual", paginaAtual); 
+				modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
+				if(logado) {
+					int maxDiasMes = 28;
+					List<Integer> listaDias = new ArrayList<Integer>();
+					
+					int ano = anoSelecionado;
+				    int mes = 0;
+				    int dia = 1;
+				    
+				    if(proximo == null && anterior == null ) {
+				    	mes = calendar.get(Calendar.MONTH);
+				    	mes++;
+				    	dia = calendar.get(Calendar.DAY_OF_MONTH);
+				    } else {
+				    	mes = mesSelecionado;
+				    	dia = 1;
+				    }
+				     
+				    String semana = "";
+				    String mesStr = "";
+				    
+				    //String dia val
+				    String diaVal = "";
+				    if(dia < 10) {
+				    	diaVal = "0"+dia;
+				    } else {
+				    	diaVal = ""+dia;
+				    }
+				    
+				    //Primeiro dia da semana do mes:
+				    String diaPrimeiroSemana = "---";
+				    GregorianCalendar gc = new GregorianCalendar();
+				    GregorianCalendar primeiro = new GregorianCalendar();
+				    if((proximo == null && anterior == null) || calendar.get(Calendar.MONTH) == (mesSelecionado-1) ) {
+				    	gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(diaVal+"/"+mes+"/"+ano));
+				    } else {
+				    	gc.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
+				    }
+				    int semanaVal  = gc.get(Calendar.DAY_OF_WEEK);
+				    
+				    primeiro.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
+				    switch (primeiro.get(Calendar.DAY_OF_WEEK)) {
+			            case Calendar.SUNDAY:
+			            	diaPrimeiroSemana = "DOM";
+			                break;
+			            case Calendar.MONDAY:
+			            	diaPrimeiroSemana = "SEG";
+			                break;
+			            case Calendar.TUESDAY:
+			            	diaPrimeiroSemana = "TER";
+			            break;
+			            case Calendar.WEDNESDAY:
+			            	diaPrimeiroSemana = "QUA";
+			                break;
+			            case Calendar.THURSDAY:
+			            	diaPrimeiroSemana = "QUI";
+			                break;
+			            case Calendar.FRIDAY:
+			            	diaPrimeiroSemana = "SEX";
+			                break;
+			            case Calendar.SATURDAY:
+			            	diaPrimeiroSemana = "SAB";
+				    }
+				    
+				    switch(semanaVal) {
+					    case 1:
+					    	semana = "Domingo";
+					    	break;
+					    case 2:
+					    	semana = "Segunda-Feira";
+					    	break;
+					    case 3:
+					    	semana = "Terça-Feira";
+					    	break;
+					    case 4:
+					    	semana = "Quarta-Feira";
+					    	break;
+					    case 5:
+					    	semana = "Quinta-Feira";
+					    	break;
+					    case 6:
+					    	semana = "Sexta-Feira";
+					    	break;
+					    case 7:
+					    	semana = "Sábado";
+					    	break;
+					    default:
+					}
+				    
+				    switch(mes) {
+					    case 1:
+					    	mesStr = "Janeiro";
+					    	break;
+					    case 2:
+					    	mesStr = "Fevereiro";
+					    	break;
+					    case 3:
+					    	mesStr = "Mar&ccedil;o";
+					    	break;
+					    case 4:
+					    	mesStr = "Abril";
+					    	break;
+					    case 5:
+					    	mesStr = "Maio";
+					    	break;
+					    case 6:
+					    	mesStr = "Junho";
+					    	break;
+					    case 7:
+					    	mesStr = "Julho";
+					    	break;
+					    case 8:
+					    	mesStr = "Agosto";
+					    	break;
+					    case 9:
+					    	mesStr = "Setembro";
+					    	break;
+					    case 10:
+					    	mesStr = "Outubro";
+					    	break;
+					    case 11:
+					    	mesStr = "Novembro";
+					    	break;
+					    case 12:
+					    	mesStr = "Dezembro";
+					    	break;
+					    default:
+				  }
+				  
+				    
+				  
+				  
+				  if(proximo == null && anterior == null ) {
+					  Calendar datas = new GregorianCalendar();
+				      datas.set(Calendar.MONTH, Calendar.MONTH);//2
+				      maxDiasMes = datas.getActualMaximum (Calendar.DAY_OF_MONTH);
+				      for(int i = 1; i <= maxDiasMes; i++) {
+				        	listaDias.add(i);
+				      }
+				  } else {
+					  GregorianCalendar gcb = new GregorianCalendar();
+					  gcb.setTime(new SimpleDateFormat("dd/MM/yyyy").parse("01/"+mes+"/"+ano));
+				      maxDiasMes = gcb.getActualMaximum (Calendar.DAY_OF_MONTH);
+				      for(int i = 1; i <= maxDiasMes; i++) {
+				        	listaDias.add(i);
+				      }
+				  }
+				    
+			        
+				  
+			        
+			      System.out.println("Ano \t\t: " + ano);
+			      System.out.println("Mês \t\t: " + mes);
+			      System.out.println("MêsStr \t\t: " + mesStr);
+				  System.out.println("Dia \t\t: " + dia);
+				  System.out.println("Dia da Semana \t: " + semana);
+				  System.out.println("Primeiro dia da Semana \t: " + diaPrimeiroSemana);
+				  System.out.println("Máximo mês \t: " + maxDiasMes);
+				  System.out.println("-----------------------------------------------------------------");
+			      
+				  
+				  modelAndView.addObject("mesSelecionado", mesSelecionado);
+				  modelAndView.addObject("maxDiasMes", maxDiasMes);
+				  modelAndView.addObject("hoje", "Dia " + diaVal + ": " + semana);
+				  modelAndView.addObject("diaVal", diaVal);
+				  modelAndView.addObject("dia", dia);
+				  modelAndView.addObject("mes", mesStr);
+				  if(mes < 10) {
+					  modelAndView.addObject("mesNumero", "0"+mes);
+				  } else {
+					  modelAndView.addObject("mesNumero", mes);
+				  }
+				  modelAndView.addObject("ano", ano);
+				  modelAndView.addObject("listaDias", listaDias);
+				  modelAndView.addObject("diaPrimeiroSemana", diaPrimeiroSemana);
+				  
+				  
+				  List<Usuario> funcionarios = usuarioDao.buscarFuncionarios();
+				  modelAndView.addObject("funcionarios", funcionarios);
+				  List<Preco> precos = precoDao.buscarTudo();
+				  modelAndView.addObject("precos", precos);
+				  List<Consulta> consultas = consultaDao.buscarTudo();
+				  modelAndView.addObject("consultas", consultas);
+				  modelAndView.addObject("mensagem", msg);
+				  if(erro) {
+					  modelAndView.addObject("tipoMensagem", "erro");  
+				  } else {
+					  modelAndView.addObject("tipoMensagem", "info");
+				  }
+				  
+				}
 			}
+			
+			session.setAttribute("mesSelecionado",mesSelecionado);
+			session.setAttribute("anoSelecionado",anoSelecionado);
+			
 			return modelAndView; //retorna a variavel
 		}
 		
 		
 		@RequestMapping(value = "/minhaAgenda", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
-		public ModelAndView minhaAgenda(String acao, String tabelaSolicitada,Integer idValor, String data_str, String inicioHora_str, String fimHora_str, String cliente_str, String servico_str, String preco_str, String observacao_str) throws SQLException {
-			paginaAtual = "Minha Agenda";
-			iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = verificaLink("pages/minhaAgenda");
-			itemMenu = link;
+		public ModelAndView minhaAgenda(HttpServletRequest request, HttpServletResponse response, String acao, String tabelaSolicitada,Integer idValor, String data_str, String inicioHora_str, String fimHora_str, String cliente_str, String servico_str, String preco_str, String observacao_str) throws SQLException {
+			HttpSession session = request.getSession();
+			Boolean logado = false;
+			String paginaAtual = "Minha Agenda";
+			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
+			String link = "pages/minhaAgenda";
+			String itemMenu = link;
+			Usuario usuarioSessao = new Usuario();
+			if(session.getAttribute("logado") != null) {
+				logado = (Boolean) session.getAttribute("logado");
+			}
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
 			modelAndView.addObject("usuario", usuarioSessao);
 			modelAndView.addObject("paginaAtual", paginaAtual); 
@@ -1113,7 +1241,7 @@ public class SistemaController {
 						}
 					}
 				}
-				atualizarPagina = "/minhaAgenda";
+				String atualizarPagina = "/minhaAgenda";
 				List<Consulta> consultas = consultaDao.buscarMinhaAgenda(usuarioSessao.getId());
 				modelAndView.addObject("consultas", consultas);
 				modelAndView.addObject("paginaAtual", paginaAtual);
