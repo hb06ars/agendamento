@@ -409,10 +409,10 @@ function redirecionar(link){
 			        <div class="row">
 						<div class="col-lg-6">
 							<c:if test="${usuario.perfil.funcionario }">
-								<input name="nomeCliente" id="nomeCliente" placeholder="Insira o nome do Cliente! *" value="" required>
+								<input name="nomeCliente" id="nomeCliente" placeholder="Insira o nome do Cliente! *" value="" required autofocus>
 							</c:if>
 							<c:if test="${!usuario.perfil.funcionario }">
-								<input name="nomeCliente" id="nomeCliente" placeholder="Insira seu nome." value="${usuario.nome }">
+								<input name="nomeCliente" id="nomeCliente" placeholder="Insira seu nome." value="${usuario.nome }" required autofocus>
 							</c:if>
 			          <div class="info_b">
 			            <div class="date_b">
@@ -488,7 +488,7 @@ function redirecionar(link){
 			        </div>
 			        
 			        <div>
-			            &nbsp&nbsp&nbsp&nbsp<button id="botaoSalvar" onclick="submitForm()" class="btn btn-default">
+			            &nbsp&nbsp&nbsp&nbsp<button id="botaoSalvar" onclick="return submitForm()" class="btn btn-default">
 			              Salvar <i class="ion-checkmark"></i>
 			            </button>
 			            &nbsp&nbsp&nbsp&nbsp<span class="btn btn-danger" onclick="cancela()">
@@ -540,6 +540,7 @@ function submitForm(){
 		document.getElementById("mensagemModal").innerHTML = 'Preencha ao menos o nome do Cliente, Hora e Servi&ccedil;o!';
 		$("#modalMensagem").modal().show();
 	}
+	return false
 }
 
 

@@ -315,9 +315,9 @@ public class SistemaController extends HttpServlet {
 		
 		@RequestMapping(value = "/deletando", method = {RequestMethod.GET, RequestMethod.POST}) // Pagina de Alteração de Perfil
 		public ModelAndView deletando(HttpServletRequest request, HttpServletResponse response, String tabela,Integer id) { //Função e alguns valores que recebe...
-			String paginaAtual = "Clientes";
-			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = "pages/clientes";
+			String paginaAtual = "";
+			String iconePaginaAtual = ""; //Titulo do menuzinho.
+			String link = "pages/deslogar";
 			String itemMenu = link;
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
 			HttpSession session = request.getSession();
@@ -333,6 +333,7 @@ public class SistemaController extends HttpServlet {
 			if(logado) {
 				//Caso esteja logado.
 				if(tabela.equals("usuario")) {
+					link = "pages/clientes";
 					modelAndView = new ModelAndView(link);
 					paginaAtual = "Clientes";
 					Usuario objeto = usuarioDao.findById(id).get();
@@ -345,6 +346,7 @@ public class SistemaController extends HttpServlet {
 					atualizarPagina = "/clientes";
 				}
 				if(tabela.equals("funcionario")) {
+					link = "pages/funcionarios";
 					modelAndView = new ModelAndView(link);
 					paginaAtual = "Funcionários";
 					Usuario objeto = usuarioDao.findById(id).get();
@@ -602,9 +604,9 @@ public class SistemaController extends HttpServlet {
 		
 		@RequestMapping(value = "/clientes", produces = "text/plain;charset=UTF-8", method = {RequestMethod.GET,RequestMethod.POST}) // Pagina de Vendas
 		public ModelAndView clientes(HttpServletRequest request, HttpServletResponse response, Usuario cliente, String acao ) throws SQLException, ParseException {
-			String paginaAtual = "Clientes";
-			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = "pages/clientes";
+			String paginaAtual = "";
+			String iconePaginaAtual = ""; //Titulo do menuzinho.
+			String link = "pages/deslogar";
 			String itemMenu = link;
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
 			HttpSession session = request.getSession();
@@ -617,14 +619,10 @@ public class SistemaController extends HttpServlet {
 			if(session.getAttribute("usuarioSessao") != null) {
 				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
 			}
-			List<Preco> grupos = precoDao.buscarTudo();
-			modelAndView.addObject("grupos", grupos);			
-			modelAndView.addObject("usuario", usuarioSessao);
-			modelAndView.addObject("paginaAtual", paginaAtual); 
-			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
-			
 			
 			if(logado) {
+				link = "pages/clientes";
+				modelAndView = new ModelAndView(link);
 				//Gerando matrícula aleatória
 				String matriculaPadrao = gerarMatricula(usuarioSessao);
 				modelAndView.addObject("matriculaPadrao", matriculaPadrao);
@@ -670,7 +668,11 @@ public class SistemaController extends HttpServlet {
 					modelAndView.addObject("mensagem", "Já existe este CPF / Matrícula.");
 					modelAndView.addObject("tipoMensagem", "erro");
 				}
-				modelAndView.addObject("atualizarPagina", atualizarPagina);
+				List<Preco> grupos = precoDao.buscarTudo();
+				modelAndView.addObject("grupos", grupos);			
+				modelAndView.addObject("usuario", usuarioSessao);
+				modelAndView.addObject("paginaAtual", paginaAtual); 
+				modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
 				List<Usuario> usuarios = usuarioDao.buscarClientes();
 				modelAndView.addObject("usuarios", usuarios);
 			}
@@ -1178,17 +1180,20 @@ public class SistemaController extends HttpServlet {
 			Boolean logado = false;
 			String paginaAtual = "Minha Agenda";
 			String iconePaginaAtual = "fa fa-user"; //Titulo do menuzinho.
-			String link = "pages/minhaAgenda";
+			String link = "pages/deslogar";
 			String itemMenu = link;
 			Usuario usuarioSessao = new Usuario();
 			if(session.getAttribute("logado") != null) {
 				logado = (Boolean) session.getAttribute("logado");
+				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
 			}
 			ModelAndView modelAndView = new ModelAndView(link); //JSP que irá acessar.
 			modelAndView.addObject("usuario", usuarioSessao);
 			modelAndView.addObject("paginaAtual", paginaAtual); 
 			modelAndView.addObject("iconePaginaAtual", iconePaginaAtual);
 			if(logado) {
+				link = "pages/minhaAgenda";
+				modelAndView = new ModelAndView(link);
 				//... Salvando dados.
 				if(acao != null) {
 					if(acao.equals("salvar")) {
@@ -1243,8 +1248,10 @@ public class SistemaController extends HttpServlet {
 				}
 				String atualizarPagina = "/minhaAgenda";
 				List<Consulta> consultas = consultaDao.buscarMinhaAgenda(usuarioSessao.getId());
+				System.out.println(usuarioSessao.getId());
 				modelAndView.addObject("consultas", consultas);
 				modelAndView.addObject("paginaAtual", paginaAtual);
+				modelAndView.addObject("usuario", usuarioSessao);
 			}
 			return modelAndView; //retorna a variavel
 		}
