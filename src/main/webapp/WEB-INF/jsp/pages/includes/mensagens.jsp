@@ -13,8 +13,9 @@
 
 
 <script type="text/javascript">
-$("#alerta").hide();
-$("#alertaErro").hide();
+try { $("#alerta").hide(); } catch(err) {}
+try { $("#alertaErro").hide(); } catch(err) {}
+
 function mensagem(titulo, corpo){
 	document.getElementById("alerta").style.display = "block";
 	document.getElementById("tituloMsg").innerHTML = titulo;

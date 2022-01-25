@@ -845,25 +845,17 @@ public class SistemaController extends HttpServlet {
 			HttpSession session = request.getSession();
 			String atualizarPagina = "";
 			Usuario usuarioSessao = new Usuario();
-			Boolean logado = false;
 			Integer mesSelecionado = 0;
 			Integer anoSelecionado = 0;
-			if(session.getAttribute("logado") != null) {
-				logado = (Boolean) session.getAttribute("logado");
-			} else {
-				request.getRequestDispatcher("/WEB-INF/jsp/pages/deslogar.jsp").forward(request, response);
-			}
 			if(session.getAttribute("usuarioSessao") != null) {
 				usuarioSessao = (Usuario) session.getAttribute("usuarioSessao");
-				request.getRequestDispatcher("/WEB-INF/jsp/pages/agendamento.jsp").forward(request, response);
-			}
-			if(session.getAttribute("mesSelecionado") != null) {
-				mesSelecionado = (Integer) session.getAttribute("mesSelecionado");
-			}
-			if(session.getAttribute("anoSelecionado") != null) {
-				anoSelecionado = (Integer) session.getAttribute("anoSelecionado");
-			}
-			if(logado) {
+				if(session.getAttribute("mesSelecionado") != null) {
+					mesSelecionado = (Integer) session.getAttribute("mesSelecionado");
+				}
+				if(session.getAttribute("anoSelecionado") != null) {
+					anoSelecionado = (Integer) session.getAttribute("anoSelecionado");
+				}
+				
 				String msg = "";
 				Boolean erro = false;
 				try {
@@ -961,7 +953,7 @@ public class SistemaController extends HttpServlet {
 				request.setAttribute("usuario", usuarioSessao);
 				request.setAttribute("paginaAtual", paginaAtual); 
 				request.setAttribute("iconePaginaAtual", iconePaginaAtual);
-				if(logado) {
+				if(session.getAttribute("usuarioSessao") != null) {
 					int maxDiasMes = 28;
 					List<Integer> listaDias = new ArrayList<Integer>();
 					
@@ -1151,17 +1143,15 @@ public class SistemaController extends HttpServlet {
 				  }
 				  
 				}
+				session.setAttribute("mesSelecionado",mesSelecionado);
+				session.setAttribute("anoSelecionado",anoSelecionado);
+				request.setAttribute("itemMenuSelecionado", "home");
+				
+				request.getRequestDispatcher("/WEB-INF/jsp/pages/agendamento.jsp").forward(request, response);
+			} else{
+				response.sendRedirect("/deslogar");
 			}
 			
-			session.setAttribute("mesSelecionado",mesSelecionado);
-			session.setAttribute("anoSelecionado",anoSelecionado);
-			
-			if(session.getAttribute("usuarioSessao") != null) {
-				response.sendRedirect("/home");
-			} else {
-				request.getRequestDispatcher("/WEB-INF/jsp/index.jsp").forward(request, response);
-			}
-			request.setAttribute("itemMenuSelecionado", "home");
 		}
 		
 		
