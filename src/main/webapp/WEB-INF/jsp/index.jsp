@@ -43,13 +43,13 @@
     <body onload="iniciando()">
     
 
-        <div class="account-pages"></div>
+        <div style="background-position: center;background-repeat: no-repeat; background-image: url('/assets/images/fundo.png');" class="account-pages"></div>
         <div class="clearfix"></div>
         
 		   
 
         <div class="wrapper-page">
-        	<div class=" card-box">
+        	<div class="card-box">
             <div class="panel-heading"> 
                 <h3 class="text-center"> Sistema </h3><h3 class="text-center"><strong class="text-custom">Agendamento</strong> </h3>
             </div> 

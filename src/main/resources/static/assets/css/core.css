@@ -362,7 +362,8 @@ blockquote small {
   -moz-border-radius: 5px;
   background-clip: padding-box;
   margin-bottom: 20px;
-  background-color: #323b44;
+  background-color: rgba(43, 51, 59, 0.75);
+  /* #323b44 */
 }
 /* Grid page */
 .grid-structure .grid-container {
